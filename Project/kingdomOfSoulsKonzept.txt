@@ -1,0 +1,48 @@
+story: mittelalter, untote könig greift mit seiner armee das königreich an. 
+
+2 königreiche -> kingdom of souls und kingdom of the undead, beide ursprünglich friedlich
+
+vorgeschichte: vor tausenden jahren wurde der untote könig versiegelt, kehrt dann nach tausend weiteren
+jahren zurück und wird könig von kingdom of the undead, alle bürger schauen auf ihm und folgen seinen
+befehlen -> kingdom of souls anzugreifen
+
+ziel des spiels/story -> der abenteurer besiegt den untoten könig und bringt den frieden zurück, weil er
+den frieden schützen/zurückbringen/aufrechterhalten will.
+
+
+man geht aus der stadt und wird zum abenteurer -> 1 jahr später
+greift der untote könig an, kingdom of souls erwartet das nicht und wird überrant. 
+
+während dem krieg, lernt der abenteurer neue freunde kennen und versucht die eroberten großstädte zurück
+zuholen, da der untote könig mit seiner armee kingdom of souls überrant hat und deswegen schon ein teil
+des königreichs erobert wurde.
+
+
+was passiert am anfang: tutorial -> man reist durch die wälder und stößt auf kleine schwache monster ->
+danach geht er in die hauptstadt zurück, da er das merkwürdig findet -> die hauptstadt wird von den 
+untoten angegriffen.
+
+
+kampfsystem -> gegner haben ein schild, was man mit bestimmten attacken zerstören kann
+man hat hp, mana, soulbar
+man kann im kampf entweder angreifen, ein item benutzen (bag) und flüchten 
+der kampf ist rundenbasiert -> es kann entschieden werden mit welcher attacke man angreift, manche 
+angriffe verbrauchen mana
+attacken haben verschiedene typen, die unterschiedlich effektiv auf gegner sind. 
+nach jeder runde eines charakters wird die soulbar aufgeladen -> voll aufgeladen kann man eine stärkere
+attacke einsetzen 
+
+das spielt hat eine welt, die sich im laufe der geschichte weiter öffnet, die späteren gebiete haben
+stärkere gegner und mehrere herausforderungen.
+
+grafik -> pixel
+
+21.1 -> konzept, welche typen, gegner -> was für gegner, welche typen
+main charakter -> am anfang des spiels kann entschieden werden was man sein kann -> warrior, assassin, magician, healer, supporter, undead
+(1 bestimmter partymember und gegner)
+typen -> elektro, feuer, eis, dunkelheit, licht, physisch, status(zum supporten, healen, effekte)
+
+
+
+
+

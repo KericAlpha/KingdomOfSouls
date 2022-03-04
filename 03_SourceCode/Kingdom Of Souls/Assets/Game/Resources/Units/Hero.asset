@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8e03f421ff57b4c8dac84d18f3769f, type: 3}
+  m_Name: Hero
+  m_EditorClassIdentifier: 
+  name: Hero
+  description: 
+  sprite: {fileID: 21300000, guid: 0d094e76be2d6cb4db7502e739fc3e29, type: 3}
+  unitType: 0
+  damage: 44
+  maxHP: 120
+  currentHP: 120
+  maxMana: 11
+  currentMana: 11
+  defense: 57
+  speed: 28
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 4867df97de0d9f5488ff9b3a0956d395, type: 2}
+    levelToLearn: 1
+  - moveBase: {fileID: 11400000, guid: c1c8a9ae7f8d5904daea61f9146ff281, type: 2}
+    levelToLearn: 4
+  - moveBase: {fileID: 11400000, guid: 9944653e65e87214486255fb20fc0ddc, type: 2}
+    levelToLearn: 7

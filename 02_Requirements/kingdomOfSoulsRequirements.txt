@@ -1,0 +1,16 @@
+As a user I want to play the game in order to have a challange and to have fun.
+
+As a user I want to set a difficuly in order to have a easier gameplay or a harder gameplay.
+
+As a user i want to see and edit my party in order to create strategies against the next enemy.
+
+
+
+As a developer I want to fix bugs regularly after the release of the game in order to
+give the players the best experience.
+
+As a story writter I want to write a well made story in order to entertain the players.
+
+As a project leader/member I want to deal with our project and the ideas in order to
+expand my imagination, so I can create new ideas and features.
+

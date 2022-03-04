@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/03_SourceCode.iml" filepath="$PROJECT_DIR$/.idea/03_SourceCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kata/OrderedJobs/OrderedJobs.iml" filepath="$PROJECT_DIR$/Kata/OrderedJobs/OrderedJobs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kata/RomanNumberConverter/RomanNumberConverter.iml" filepath="$PROJECT_DIR$/Kata/RomanNumberConverter/RomanNumberConverter.iml" />
+    </modules>
+  </component>
+</project>

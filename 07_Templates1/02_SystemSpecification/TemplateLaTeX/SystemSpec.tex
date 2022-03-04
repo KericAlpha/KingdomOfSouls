@@ -1,0 +1,209 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epstopdf}
+\usepackage[english, german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+
+\newenvironment{explanation}{%
+   \setlength{\parindent}{0pt}
+   \itshape
+   \color{blue}
+}{}
+
+\newcommand{\projectname}{Template}
+\newcommand{\productname}{Name of the Project}
+\newcommand{\projectleader}{P. Bauer}
+\newcommand{\documentstatus}{In process}
+%\newcommand{\documentstatus}{Submitted}
+%\newcommand{\documentstatus}{Released}
+\newcommand{\version}{V. 1.0}
+
+\begin{document}
+\begin{titlepage}
+\begin{flushright}
+\includegraphics[scale=.5]{htlleondinglogo.png}\\
+\end{flushright}
+
+\vspace{10em}
+
+\begin{center}
+{\Huge System Specification} \\[3em]
+{\LARGE \productname} \\[3em]
+\end{center}
+
+\begin{flushleft}
+\begin{tabular}{|l|l|}
+\hline
+Project Name & \projectname \\ \hline
+Project Leader & \projectleader \\ \hline
+Document state & \documentstatus \\ \hline
+Version & \version \\ \hline
+\end{tabular}
+\end{flushleft}
+
+\end{titlepage}
+\section*{Revisions}
+\begin{tabular}{|l|l|l|}
+\hline
+\cellcolor[gray]{0.5}\textcolor{white}{Date} & \cellcolor[gray]{0.5}\textcolor{white}{Author} & \cellcolor[gray]{0.5}\textcolor{white}{Change} \\ \hline
+November 03, 2019&P. Bauer&First version \\ \hline
+\end{tabular}
+\pagebreak
+
+\tableofcontents
+\pagebreak
+
+\section{Initial Situation and Goal}
+\begin{explanation}
+This section describes the initial situation and the motivation to start this project. You describe the problem of the existing system or approach and make clear what led to the decision to carry out this project and point out the benefits of the new system.
+Furthermore, list all relevant project stake holders and draw a picture how your system will fit into the framework of existing systems and environments. Finally a first draft of general requirements like technical constraints or security constraints has to be given.
+\end{explanation}
+
+\subsection{Initial Situation}
+\begin{explanation}
+In this subsection you describe the scope of application of your system. Describe the current state of how the current system works. Give current work flows and introduce and explain domain specific terms. Revisit the section “Initial Situation” from your project proposal and see what you would refine under your now improved understanding of the project
+\end{explanation}
+
+\subsubsection{Application Domain}
+\begin{explanation}
+Describe the application domain of your system as well as the environment in which it is embedded. If there exists an environmental business process you should describe it here. Focus on the interrelationship of terms, business processes etc. (... not sure whether I understand what they really mean here...)
+
+Your goal in this section is to introduce the domain-specific terminology and the context in which your system lives. Introduce in a way such that an interested layman can follow your text, establish a clear structure of your text, use illustrations and don’t assume a detailed domain specific knowledge.
+
+Take care to clearly separate assumptions from given hard facts. This enables you to trace down your requirements in case of (customer) complaints in a later project stage.
+\end{explanation}
+
+\subsubsection{Glossary}
+\begin{explanation}
+This subsection provides primarily the same information as the above but it adds value in that sense that the reader can look up explanations for subject specific terms. The focus is switched from emphasizing the interrelationship to a term-centric description.
+\end{explanation}
+
+\subsubsection{Model of the Application Domain}
+\begin{explanation}
+This subsection completes the domain specific explanations. Explain the relations between the domain specific terms by means of a graphic model (UML class diagram).
+\end{explanation}
+
+\subsection{Goal}
+\begin{explanation}
+Describe in detail what your project wants to achieve. Give clear answers how the shortcomings mentioned in the Initial Situation will be solved by the project.
+\end{explanation}
+\pagebreak
+
+\section{Functional Requirements}
+\begin{explanation}
+Functional requirements describe the features of a system which are expected by a user in order to solve a specific problem. The requirements are derived from the business processes and work flows which are supported by the system.
+
+The description of functional requirements is accomplished by means of use cases. A use case describes a concrete and self-contained process. The sum of all use cases describes the system behaviour. Describe use cases in plain text and support it by provide clear and illustrative use case diagrams.
+In case of a very data-oriented application provide a first version of a data model (business domain model). This model is the basis for the data base design in a later project stage. The data model is derived from the entities of the domain model.
+\end{explanation}
+
+\subsection{Overview}
+\begin{explanation}
+In this subsection you give an overview of all use cases. Starting with a UML use case diagram you list all use cases covered in your system and a short description of each of the use cases.
+\end{explanation}
+
+\subsection{Use Case 1: $<$Name$>$}
+\begin{explanation}
+This subsection is copied for each use case you listed in the previous section.
+\end{explanation}
+\subsubsection{General Description}
+\begin{explanation}
+Give a general description of where a tabular form might help:
+\end{explanation}
+
+\begin{tabular}{|p{.2\linewidth}|p{.65\linewidth}|}
+\hline 
+ID: & Identifier of the use case \\ \hline
+Goal: & The goal of the use case \\ \hline
+Precondition: & Under which condition is the user case triggered? \\ \hline
+Postcondition: & What conditions are true after the use case was successfully executed? \\ \hline
+Involved Users: &Role name: Description of users interacting with the system. “Users” can be other systems, too. \\ \hline
+\end{tabular}
+
+\subsubsection{UI to call the use case}
+\begin{explanation}
+Give a sketch of the UI and describe the UX controls.
+\end{explanation}
+
+\subsubsection{The Standard Use}
+\begin{explanation}
+Describe the happy path.
+\begin{itemize}
+	\item UI
+	\item Description
+	\item Activity, Sequence, or State Diagram to visualize the workflow
+\end{itemize}
+\end{explanation}
+
+\subsubsection{The Non-Standard Use}
+\begin{explanation}
+Describe the corner cases, possible errors and how the system reacts on them
+\begin{itemize}
+	\item UI
+	\item Description
+	\item Activity, Sequence, or State Diagram to visualize the workflow
+\end{itemize}
+\end{explanation}
+\pagebreak
+
+\section{Non-Functional Requirements}
+\begin{explanation}
+Non-functional requirements describe all aspects of a system that cannot be mapped to a specific feature. Nevertheless these requirements are essential for the system itself. Non-functional requirements are, e.g., quality requirements, security requirements, or performance requirements.
+
+Non-functional requirements define basic features of a system which also have an impact on the architecture. They also influence the development costs and, therefore should be formulated in a measurable way.
+WRONG: The system shall be fast responding.
+CORRECT: The response time shall be within 500 ms.
+
+The following section has to be copied for each non-functional requirement.
+\end{explanation}
+
+\subsection{NFR 1: $<$Name$>$}
+\begin{tabular}{|p{.2\linewidth}|p{.65\linewidth}|}
+\hline 
+ID: & Identifier of the NFR \\ \hline
+Name: & The name of the NFR \\ \hline
+Type	: & Type as described below \\ \hline
+Descritpion: &  \\ \hline
+\end{tabular}
+
+The type of the NFR shall be taken from one of the following: The table below shall finally be deleted.
+
+\begin{tabular}{|p{.15\linewidth}|p{.25\linewidth}|p{.4\linewidth}|}
+\hline
+MAINT & Maintenance and portability requirement & Which maintenance or porting effort is expected in the future? Internationalization expected? Porting to different hardware platform?... \\ \hline
+SEC & Security requirement & Security requirements comprise confidentiality, data integrity, and availability. How much do we have to consider that data is not accessible to unauthorized persons? Is the correctness and/or consistency of data to be guaranteed? How severe are total system faults? \\ \hline
+LEGAL & Legal requirement & Are there any standards or legal constraints to be considered? \\ \hline
+USE & Usability Requirement & Usability covers all aspects to make the targeted user like to work with the software. \\ \hline
+EFFIC & Efficiency Requirement & Runtime and/or memory efficiency of the program. \\ \hline
+\end{tabular}
+\pagebreak
+
+\section{Quantity Structure}
+\begin{explanation}
+Describe the number of expected records in master data as well as business cases. This assessment is basis to make proper decisions concerning the form of data persistence (e.g., XML or data base) and data base product. Furthermore the quantity structure gives you a better idea about special requirements (e.g. the GUI) for your system because of hight quantity data.
+\end{explanation}
+
+\pagebreak
+\section{System Architecture and Interfaces}
+\begin{explanation}
+To illustrate how your system is embedded in it’s environment list all interfaces to surrounding systems. Interfaces to users, supporting systems, logistics, peer-systems are to be listed and described.
+\end{explanation}
+
+\pagebreak
+\section{Acceptance Criteria}
+\begin{explanation}
+The acceptance criteria define which criteria the system has to fulfill in order to be accepted. Describe, what has to be checked such that the system can be accepted. Give at least one acceptance test for each functional requirement described in this document. For each acceptance criterion one subsection has to be written.
+\end{explanation}
+
+\end{document}  

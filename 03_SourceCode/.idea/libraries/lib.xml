@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/apiguardian-api-1.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-jupiter-5.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/opentest4j-1.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-platform-engine-1.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-jupiter-api-5.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-jupiter-params-5.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-platform-commons-1.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Kata/RomanNumberConverter/lib/junit-jupiter-engine-5.5.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
