@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Dark Wall
   description: Blocks Dark attack (1 time)
-  moveType: 7
+  moveType: 6
   power: 0
   accuracy: 100
   manaCost: 200
+  AOE: 0
+  effect: 15
+  chance: 100
+  all: 0

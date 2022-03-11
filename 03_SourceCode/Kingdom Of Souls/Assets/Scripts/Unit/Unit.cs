@@ -53,38 +53,50 @@ public class Unit
 
     public bool TakeDamage(Move move, Unit attacker)
     {
-        float typemultiplier = 1F;
-        float rngdamage = Random.Range(0.9F, 1F);
-        float critical = 1F;
-
-        if(Random.value * 100F <= 5F)
+        if(move.MoveBase.MoveType != MoveType.Status)
         {
-            critical = 2F;
+            float typemultiplier = 1F;
+            float rngdamage = Random.Range(0.9F, 1F);
+            float critical = 1F;
+
+            if (Random.value * 100F <= 5F)
+            {
+                critical = 2F;
+            }
+
+            if (this.UnitBase.Weakness.Contains(move.MoveBase.MoveType))
+            {
+                typemultiplier += 0.5F;
+            }
+
+            if (this.UnitBase.Resistance.Contains(move.MoveBase.MoveType))
+            {
+                typemultiplier -= 0.5F;
+            }
+
+            float damageWithoutMultiplicator = (move.MoveBase.Power * 3) * ((float)attacker.Attack / Defense);
+            float multiplicator = typemultiplier * rngdamage * critical;
+
+            int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
+
+            // Debug.Log(damage);
+            Debug.Log(Mana);
+
+            HP = HP - damage;
+            Mana = Mana - move.ManaCost;
+
+            Debug.Log(Mana);
+
+            if (HP <= 0)
+            {
+                HP = 0;
+                return true;
+            }
+
+            return false;
         }
 
-        if(this.UnitBase.Weakness.Contains(move.MoveBase.MoveType))
-        {
-            typemultiplier += 0.5F;
-        }
 
-        if (this.UnitBase.Resistance.Contains(move.MoveBase.MoveType))
-        {
-            typemultiplier -= 0.5F;
-        }
-
-        float damageWithoutMultiplicator = (move.MoveBase.Power * 3) * ((float)attacker.Attack / Defense);
-        float multiplicator = typemultiplier * rngdamage * critical;
-
-        int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
-
-        Debug.Log(damage);
-        
-        HP = HP - damage;
-        if(HP <= 0)
-        {
-            HP = 0;
-            return true;
-        }
 
         return false;
     }

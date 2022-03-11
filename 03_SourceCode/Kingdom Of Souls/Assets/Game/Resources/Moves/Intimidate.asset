@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec3c25e34e557b849bedc9d8cefd0ee3, type: 3}
-  m_Name: Ice Cube
+  m_Name: Intimidate
   m_EditorClassIdentifier: 
-  name: Ice Cube
-  description: freeze the Enemy
+  name: Intimidate
+  description: Debuffs Enemy DMG
   moveType: 7
   power: 0
-  accuracy: 70
-  manaCost: 250
+  accuracy: 100
+  manaCost: 150
   AOE: 0
-  effect: 2
+  effect: 7
   chance: 100
   all: 0

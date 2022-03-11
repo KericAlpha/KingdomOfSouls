@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Light Wall
   description: Blocks Light attack (1 time)
-  moveType: 7
+  moveType: 5
   power: 0
   accuracy: 100
   manaCost: 200
+  AOE: 0
+  effect: 17
+  chance: 100
+  all: 0

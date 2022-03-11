@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Freeze
   m_EditorClassIdentifier: 
   name: Freeze
-  description: Single Target Attack, freezes the enemy (1-2 turns)
+  description: Single Target Attack, high chance to freeze the enemy
   moveType: 4
   power: 50
   accuracy: 60
   manaCost: 60
+  AOE: 0
+  effect: 2
+  chance: 50
+  all: 0

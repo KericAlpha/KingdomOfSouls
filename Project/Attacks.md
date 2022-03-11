@@ -108,9 +108,11 @@ Taunt, 0, 100, 100, Enemies focus the user
 
 Heavens Blessing, 0, 100, 300, AOE Heal Multiplicator = 1.4
 
-Blue Gambit, 0, 100, 1/4 mana, Recovers 1/2 of your  mana for the duration of 8 turns
+Blue Gambit, 0, 100, 1/4 mana, Recovers 1/2 of your mana for the duration of 8 turns
 
-Exhaust, 0, 100, 260, Debuffs enemy ATK and SPEED
+Exhaust, 0, 100, 150, Debuffs enemy SPEED
+
+Intimidate, 0, 100, 150, Debuffs enemy DMG 
 
 Barrier, 0, 100, 240, Buffs all allies DEF 
 

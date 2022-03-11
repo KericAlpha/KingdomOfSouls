@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Electric Wall
   description: Blocks Electric attack (1 time)
-  moveType: 7
+  moveType: 2
   power: 0
   accuracy: 100
   manaCost: 200
+  AOE: 0
+  effect: 17
+  chance: 100
+  all: 0

@@ -26,4 +26,9 @@ public class BattleHud : MonoBehaviour
     {
         yield return hpBar.SetHPSmooth((float)unit.HP / unit.MaxHP);
     }
+
+    public IEnumerator UpdateMana()
+    {
+        yield return manaBar.SetManaSmooth((float)unit.Mana / unit.MaxMana);
+    }
 }

@@ -62,6 +62,7 @@ public class BattleSystem : MonoBehaviour
 
         bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
         yield return enemyHud.UpdateHP();
+        playerHud.UpdateMana();
 
         if(isDead)
         {
@@ -85,6 +86,7 @@ public class BattleSystem : MonoBehaviour
 
         bool isDead = playerUnit.Unit.TakeDamage(move, enemyUnit.Unit);
         yield return playerHud.UpdateHP();
+        enemyHud.UpdateMana();
 
         if (isDead)
         {

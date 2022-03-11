@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Exhaust
   m_EditorClassIdentifier: 
   name: Exhaust
-  description: Debuffs enemy ATK and SPEED
+  description: Debuffs enemy SPEED
   moveType: 7
   power: 0
   accuracy: 100
-  manaCost: 260
+  manaCost: 150
+  AOE: 0
+  effect: 9
+  chance: 100
+  all: 0

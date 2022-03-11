@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Imblaze
   m_EditorClassIdentifier: 
   name: Imblaze
-  description: Single Target Attack, burns the enemy
+  description: Single Target Attack, high chance to burn the enemy
   moveType: 3
   power: 60
   accuracy: 75
   manaCost: 60
+  AOE: 0
+  effect: 3
+  chance: 50
+  all: 0

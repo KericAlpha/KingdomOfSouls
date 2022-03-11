@@ -18,3 +18,7 @@ MonoBehaviour:
   power: 80
   accuracy: 90
   manaCost: 70
+  AOE: 1
+  effect: 3
+  chance: 10
+  all: 1

@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   name: Fireball
-  description: 
+  description: Single Target Attack
   moveType: 3
   power: 120
   accuracy: 90
   manaCost: 50
+  AOE: 0
+  effect: 0
+  chance: 0
+  all: 0

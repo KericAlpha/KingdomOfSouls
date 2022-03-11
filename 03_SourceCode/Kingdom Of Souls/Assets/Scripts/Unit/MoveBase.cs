@@ -14,6 +14,13 @@ public class MoveBase : ScriptableObject
     [SerializeField] int power;
     [SerializeField] int accuracy;
     [SerializeField] int manaCost;
+    [SerializeField] bool AOE;
+
+    [SerializeField] MoveEffect effect;
+    [SerializeField] float chance;
+    [SerializeField] bool all;
+    
+
 
     public string Name
     {
@@ -55,16 +62,23 @@ public enum MoveType
 
 public enum MoveEffect
 {
-    Freeze20,
-    Freeze30,
-    Freeze50,
-    Freeze100,
-    Burn20,
-    Burn30,
-    Burn50,
-    Burn100,
-    Para20,
-    Para30,
-    Para50,
-    Para100
+    None,
+    Random_Effect,
+    Freeze,
+    Burn,
+    Paralyze,
+    Bleed,
+    S_E_Accuracy,
+    S_E_DMG,
+    S_E_DEF,
+    S_E_SPEED,
+    B_Accuracy,
+    B_DMG,
+    B_DEF,
+    B_SPEED,
+    B_All,
+    DB_All,
+    Focus,
+    Block,
+    Heal,
 }
