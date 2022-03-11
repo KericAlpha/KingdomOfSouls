@@ -3390,7 +3390,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: what the fuck he used this shit ma man oke this looks good !
+  m_Text: "test \n"
 --- !u!222 &1513278797
 CanvasRenderer:
   m_ObjectHideFlags: 0

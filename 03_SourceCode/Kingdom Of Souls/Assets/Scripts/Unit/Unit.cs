@@ -50,4 +50,48 @@ public class Unit
     {
         get { return UnitBase.Speed * this.Level; }
     }
+
+    public bool TakeDamage(Move move, Unit attacker)
+    {
+        float typemultiplier = 1F;
+        float rngdamage = Random.Range(0.9F, 1F);
+        float critical = 1F;
+
+        if(Random.value * 100F <= 5F)
+        {
+            critical = 2F;
+        }
+
+        if(this.UnitBase.Weakness.Contains(move.MoveBase.MoveType))
+        {
+            typemultiplier += 0.5F;
+        }
+
+        if (this.UnitBase.Resistance.Contains(move.MoveBase.MoveType))
+        {
+            typemultiplier -= 0.5F;
+        }
+
+        float damageWithoutMultiplicator = (move.MoveBase.Power * 3) * ((float)attacker.Attack / Defense);
+        float multiplicator = typemultiplier * rngdamage * critical;
+
+        int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
+
+        Debug.Log(damage);
+        
+        HP = HP - damage;
+        if(HP <= 0)
+        {
+            HP = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public Move GetRandomMove()
+    {
+        int random = Random.Range(0, Moves.Count);
+        return Moves[random];
+    }
 }

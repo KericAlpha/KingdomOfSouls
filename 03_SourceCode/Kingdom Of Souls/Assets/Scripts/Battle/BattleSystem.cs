@@ -46,7 +46,54 @@ public class BattleSystem : MonoBehaviour
     public void PlayerMove()
     {
         state = BattleState.PlayerMove;
+        dialogueBox.EnableActionSelectorText(false);
+        dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelectorText(true);
+    }
+
+    IEnumerator PerformPlayerMove()
+    {
+        state = BattleState.Busy;
+
+        var move = playerUnit.Unit.Moves[currentMove];
+        yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
+
+        yield return new WaitForSeconds(1f);
+
+        bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
+        yield return enemyHud.UpdateHP();
+
+        if(isDead)
+        {
+            yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} is dead");
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
+    }
+
+    IEnumerator EnemyMove()
+    {
+        state = BattleState.EnemyMove;
+
+        var move = enemyUnit.Unit.GetRandomMove();
+
+        yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
+
+        yield return new WaitForSeconds(1f);
+
+        bool isDead = playerUnit.Unit.TakeDamage(move, enemyUnit.Unit);
+        yield return playerHud.UpdateHP();
+
+        if (isDead)
+        {
+            yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} is dead");
+        }
+        else
+        {
+            PlayerAction();
+        }
     }
 
     public void Update()
@@ -113,5 +160,12 @@ public class BattleSystem : MonoBehaviour
         }
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Unit.Moves[currentMove]);
-    }
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            dialogueBox.EnableMoveSelectorText(false);
+            dialogueBox.EnableDialogueText(true);
+            StartCoroutine(PerformPlayerMove());
+        }
+    } 
 }

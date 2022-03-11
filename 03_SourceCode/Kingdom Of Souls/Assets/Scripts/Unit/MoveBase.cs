@@ -52,3 +52,19 @@ public enum MoveType
     Dark,
     Status
 }
+
+public enum MoveEffect
+{
+    Freeze20,
+    Freeze30,
+    Freeze50,
+    Freeze100,
+    Burn20,
+    Burn30,
+    Burn50,
+    Burn100,
+    Para20,
+    Para30,
+    Para50,
+    Para100
+}

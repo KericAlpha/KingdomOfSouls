@@ -24,6 +24,8 @@ public class UnitBase : ScriptableObject
     [SerializeField] int speed;
 
     [SerializeField] List<LearnableMove> learnableMoves;
+    [SerializeField] List<MoveType> resistance;
+    [SerializeField] List<MoveType> weakness;
 
     public string Name
     {
@@ -73,6 +75,14 @@ public class UnitBase : ScriptableObject
     {
         get { return learnableMoves; }
     }
+    public List<MoveType> Resistance
+    {
+        get { return resistance; }
+    }
+    public List <MoveType> Weakness
+    {
+        get { return weakness; }
+    }
 }
 
 [System.Serializable]
@@ -90,6 +100,7 @@ public class LearnableMove
         get { return levelToLearn; }
     }
 }
+
 
 public enum UnitType
 {
