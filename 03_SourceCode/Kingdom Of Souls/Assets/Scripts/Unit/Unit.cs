@@ -80,12 +80,12 @@ public class Unit
             int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
 
             // Debug.Log(damage);
-            Debug.Log(Mana);
+            // Debug.Log("Before " + attacker.UnitBase.Name + attacker.UnitBase.Name);
 
             HP = HP - damage;
-            Mana = Mana - move.ManaCost;
+            attacker.Mana -= move.ManaCost;
 
-            Debug.Log(Mana);
+            // Debug.Log(Mana);
 
             if (HP <= 0)
             {

@@ -20,7 +20,7 @@ MonoBehaviour:
   maxHP: 120
   currentHP: 120
   maxMana: 11
-  currentMana: 11
+  currentMana: 5
   defense: 57
   speed: 28
   learnableMoves:

@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManaBar : MonoBehaviour
 {
     [SerializeField] GameObject mana;
+    [SerializeField] TMP_Text manaText;
 
     public void SetMana(float manaNormalized)
     {
@@ -24,5 +27,10 @@ public class ManaBar : MonoBehaviour
         }
 
         mana.transform.localScale = new Vector3(newMana, 1f);
+    }
+
+    public void SetManaText(float newMana, float maxMana)
+    {
+        manaText.text = newMana.ToString() + "/" + maxMana.ToString();
     }
 }
