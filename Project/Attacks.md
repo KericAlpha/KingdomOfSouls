@@ -2,6 +2,24 @@
 
 Power, Accuracy, Mana Cost, Description
 
+
+## Basic Attacks
+
+20, 100, 0
+
+Attack (Physical)
+
+Attack (Electric)
+
+Attack (Fire)
+
+Attack (Ice)
+
+Attack (Light)
+
+Attack (Dark)
+
+
 ## Early Game Moves 
 
 

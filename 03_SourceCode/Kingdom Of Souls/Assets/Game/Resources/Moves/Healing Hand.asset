@@ -20,5 +20,7 @@ MonoBehaviour:
   manaCost: 140
   AOE: 0
   effect: 18
-  chance: 1.4
+  chance: 0
+  multiplicator: 1.4
   all: 0
+  charge: 0

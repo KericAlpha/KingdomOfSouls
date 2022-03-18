@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BattleHud : MonoBehaviour
 {
-    [SerializeField] Text nameText;
-    [SerializeField] Text levelText;
+    [SerializeField] TMP_Text nameText;
+    [SerializeField] TMP_Text levelText;
     [SerializeField] HPBar hpBar;
     [SerializeField] ManaBar manaBar;
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,17 +9,17 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] int lettersPerSecond;
     [SerializeField] Color highlightedColor;
 
-    [SerializeField] Text dialogueText;
+    [SerializeField] TMP_Text dialogueText;
     [SerializeField] GameObject actionSelector;
     [SerializeField] GameObject moveSelector;
     [SerializeField] GameObject moveDetails;
 
-    [SerializeField] List<Text> actionTexts;
-    [SerializeField] List<Text> moveTexts;
+    [SerializeField] List<TMP_Text> actionTexts;
+    [SerializeField] List<TMP_Text> moveTexts;
 
-    [SerializeField] Text manaText;
-    [SerializeField] Text dmgText;
-    [SerializeField] Text typeText;
+    [SerializeField] TMP_Text manaText;
+    [SerializeField] TMP_Text dmgText;
+    [SerializeField] TMP_Text typeText;
 
     public void SetDialogue(string dialogue)
     {

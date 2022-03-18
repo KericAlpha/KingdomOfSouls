@@ -54,8 +54,6 @@ Undead Cultists (one of them is their leader)
 
 ## Enemies
 
-
-
 Skeleton -> Undead -> weak against Electric and Light -> resists Dark
 
 Skeleton with Sword -> Warrior -> weak against Ice and Light -> resists Dark
@@ -98,7 +96,7 @@ Humantrap -> Undead -> weak against Fire and Ice -> resists Light
 
 ## Bosses
 
-First City Undead General
+First City Undead General (reuse)
 
 Second City Undead General
 

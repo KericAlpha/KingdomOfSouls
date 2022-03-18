@@ -163,7 +163,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Unit.Moves[currentMove]);
 
-        if(Input.GetKeyDown(KeyCode.Z))
+        if(Input.GetKeyDown(KeyCode.Z) && playerUnit.Unit.Mana >= playerUnit.Unit.Moves[currentMove].ManaCost)
         {
             dialogueBox.EnableMoveSelectorText(false);
             dialogueBox.EnableDialogueText(true);

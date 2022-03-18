@@ -18,7 +18,9 @@ public class MoveBase : ScriptableObject
 
     [SerializeField] MoveEffect effect;
     [SerializeField] float chance;
+    [SerializeField] float multiplicator;
     [SerializeField] bool all;
+    [SerializeField] int charge;
     
 
 
@@ -45,6 +47,26 @@ public class MoveBase : ScriptableObject
     public int ManaCost
     {
         get { return manaCost; }
+    }
+    public MoveEffect MoveEffect
+    {
+        get { return effect; }
+    }
+    public float Chance
+    {
+        get { return chance; }
+    }
+    public float Multiplicator
+    {
+        get { return multiplicator; }
+    }
+    public bool All
+    {
+        get { return all; }
+    }
+    public int Charge
+    {
+        get { return charge; }
     }
 }
 
