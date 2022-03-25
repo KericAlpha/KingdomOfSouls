@@ -24,11 +24,11 @@ MonoBehaviour:
   defense: 52
   speed: 22
   learnableMoves:
-  - moveBase: {fileID: 11400000, guid: 861edb96c751e634c8fe73833b78a0c3, type: 2}
+  - moveBase: {fileID: 11400000, guid: 2339dcc109f8dcd49a36bbc5e74c1089, type: 2}
     levelToLearn: 1
   - moveBase: {fileID: 11400000, guid: 9944653e65e87214486255fb20fc0ddc, type: 2}
     levelToLearn: 4
-  - moveBase: {fileID: 11400000, guid: b0f0f4c1c1551d74b8b0e46ffbba8456, type: 2}
+  - moveBase: {fileID: 11400000, guid: a502b300d66daa44794d304d55340911, type: 2}
     levelToLearn: 7
   resistance: 04000000
   weakness: 02000000

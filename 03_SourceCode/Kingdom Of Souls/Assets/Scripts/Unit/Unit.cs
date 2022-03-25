@@ -2,54 +2,132 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Unit
 {
-    public UnitBase UnitBase { get; set; }
-    public int Level { get; set; }
+    [SerializeField] UnitBase _unit;
+    [SerializeField] int _level;
+
+    public UnitBase UnitBase
+    {
+        get { return _unit; }
+        private set { _unit = value; }
+    }
+    public int Level{ 
+        get { return _level; } 
+        private set { _level = value; }
+    }
 
     public int HP { get; set; }
     public int Mana { get; set; }
-
     public List<Move> Moves { get; set; }
+    public Dictionary<Stat, int> Stats { get; private set; }
+    public Dictionary<Stat, int> StatBoosts { get; private set; }
+
 
     public Unit(UnitBase uBase, int level)
     {
-        this.UnitBase = uBase;
-        this.Level = level;
-        HP = MaxHP;
-        Mana = MaxMana;
+        _unit = uBase;
+        _level = level;
 
         //Generate Moves
         Moves = new List<Move>();
-        foreach(var move in uBase.LearnableMoves)
+        foreach (var move in UnitBase.LearnableMoves)
         {
-            if(move.LevelToLearn <= level)
+            if (move.LevelToLearn <= Level)
             {
                 Moves.Add(new Move(move.MoveBase));
             }
+        }
+
+        CalculateStats();
+
+        HP = MaxHP;
+        Mana = MaxMana;
+
+        StatBoosts = new Dictionary<Stat, int>()
+        {
+            {Stat.Attack, 0},
+            {Stat.Defense, 0},
+            {Stat.Speed, 0}
+        };
+    }
+
+    /*public void Init()
+    {
+        
+    }*/
+
+   
+
+    void CalculateStats()
+    {
+        Stats = new Dictionary<Stat, int>();
+        Stats.Add(Stat.Attack, UnitBase.Damage * this.Level);
+        Stats.Add(Stat.Defense, UnitBase.Defense * this.Level);
+        Stats.Add(Stat.Speed, UnitBase.Speed * this.Level);
+
+        MaxHP = UnitBase.MaxHP * this.Level;
+        MaxMana = UnitBase.MaxMana * this.Level;
+    }
+
+    int GetStat(Stat stat)
+    {
+        int statVal = Stats[stat];
+
+        // Apply Stat Boost
+        int boost = StatBoosts[stat];
+        var boostValues = new float[] {1F, 1.5F, 2F, 2.5F, 3F };
+
+        if(boost >= 0)
+        {
+            statVal = Mathf.FloorToInt(statVal * boostValues[boost]);
+        }
+        else
+        {
+            statVal = Mathf.FloorToInt(statVal / boostValues[-boost]);
+        }
+
+        return statVal;
+    }
+
+    public void ApplyBoosts(List<StatBoost> statBoosts)
+    {
+        foreach(var statBoost in statBoosts)
+        {
+            var stat = statBoost.stat;
+            var boost = statBoost.boost;
+
+            StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -4, 4);
+
+            Debug.Log("stat boost work");
         }
     }
 
     public int Attack
     {
-        get { return UnitBase.Damage * this.Level; }
+        get { return GetStat(Stat.Attack); }
     }
     public int Defense
     {
-        get { return UnitBase.Defense * this.Level; }
+        get { return GetStat(Stat.Defense); }
     }
     public int MaxHP
     {
-        get { return UnitBase.MaxHP * this.Level; }
+        get; private set;
     }
     public int MaxMana
     {
-        get { return UnitBase.MaxMana * this.Level; }
+        get; private set;
     }
     public int Speed
     {
-        get { return UnitBase.Speed * this.Level; }
+        get { return GetStat(Stat.Speed); }
     }
+
+    public MoveType hasWall = MoveType.None;
+
+    public int focus = 0;
 
     public bool TakeDamage(Move move, Unit attacker)
     {
@@ -76,7 +154,9 @@ public class Unit
                 typemultiplier -= 0.5F;
             }
 
-            // MoveEffect(move, attacker);
+            
+
+            MoveEffect(move, attacker);
             float dmgMultiplicator = MoveDMGMultiplicator(move, attacker);
 
 
@@ -87,7 +167,18 @@ public class Unit
             // Debug.Log(damage);
             // Debug.Log("Before " + attacker.UnitBase.Name + attacker.UnitBase.Name);
 
-            HP = HP - damage;
+            if(Random.value * 100F <= move.MoveBase.Accuracy)
+            {
+                if(hasWall == move.MoveBase.MoveType)
+                {
+                    hasWall = MoveType.None;
+                }
+                else
+                {
+                    HP = HP - damage;
+                }
+            }
+
             attacker.Mana -= move.ManaCost;
 
             // Debug.Log(Mana);
@@ -107,6 +198,19 @@ public class Unit
         }
 
 
+
+        return false;
+    }
+
+    public bool LowerMana(Move move)
+    {
+        // return true if enough mana for move, false if not enough mana, all in all lower mana if move is possible to use
+
+        if(this.Mana >= move.ManaCost)
+        {
+            this.Mana -= move.ManaCost;
+            return true;
+        }
 
         return false;
     }
@@ -170,9 +274,11 @@ public class Unit
                 break;
 
             case global::MoveEffect.Focus:
+                focus += 4;
                 break;
 
             case global::MoveEffect.Block:
+                attacker.hasWall = move.MoveBase.MoveType;
                 break;
 
             case global::MoveEffect.Heal:
@@ -182,18 +288,24 @@ public class Unit
 
     public float MoveDMGMultiplicator(Move move, Unit attacker)
     {
-        if(move.MoveBase.Multiplicator > 1F)
+        bool meetsCondition = false;
+
+        if (move.MoveBase.DMGMultiplicatorCondition != DMGMultiplicatorCondition.None)
         {
-            if(move.MoveBase.Name.Equals("Final Blow") && this.HP/this.MaxHP <= 0.5F)
+            if (this.HP / this.MaxHP <= move.MoveBase.HPConditionValue/100F && move.MoveBase.DMGMultiplicatorCondition == DMGMultiplicatorCondition.BelowEnemyHP)
             {
-                Debug.Log("final blow works");
-                return 1.2F;
+                meetsCondition = true;
             }
-            if(move.MoveBase.Name.Equals("Primal Strike") && this.HP == this.MaxHP)
+
+            else if (this.HP / this.MaxHP >= move.MoveBase.HPConditionValue/100F && move.MoveBase.DMGMultiplicatorCondition == DMGMultiplicatorCondition.AboveEnemyHP)
             {
-                Debug.Log("primal strike works");
-                return 1.5F;
-            }
+                meetsCondition = true;
+            } 
+        }
+
+        if (meetsCondition)
+        {
+            return move.MoveBase.DMGMultiplicator;
         }
 
         return 1F;

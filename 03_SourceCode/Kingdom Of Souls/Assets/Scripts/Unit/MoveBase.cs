@@ -14,13 +14,27 @@ public class MoveBase : ScriptableObject
     [SerializeField] int power;
     [SerializeField] int accuracy;
     [SerializeField] int manaCost;
-    [SerializeField] bool AOE;
+    [SerializeField] MoveEffects moveEffects;
+    [SerializeField] MoveTarget target;
+
+
+    [SerializeField] bool aoe;
+    [SerializeField] int charge;
 
     [SerializeField] MoveEffect effect;
     [SerializeField] float chance;
-    [SerializeField] float multiplicator;
-    [SerializeField] bool all;
-    [SerializeField] int charge;
+    [SerializeField] int statusLength;
+
+    [SerializeField] float dmgMultiplicator;
+    [SerializeField] DMGMultiplicatorCondition dmgMultiplicatorCondition;
+    [SerializeField] float hpConditionValue;
+
+    [SerializeField] bool heal;
+    [SerializeField] float healMultiplier;
+    
+    [SerializeField] bool buff;
+    [SerializeField] bool debuff;
+    [SerializeField] bool status;
     
 
 
@@ -48,6 +62,17 @@ public class MoveBase : ScriptableObject
     {
         get { return manaCost; }
     }
+    public MoveEffects Effects
+    {
+        get { return moveEffects; }
+    }
+    public MoveTarget Target
+    {
+        get { return target; }
+    }
+
+
+
     public MoveEffect MoveEffect
     {
         get { return effect; }
@@ -56,23 +81,78 @@ public class MoveBase : ScriptableObject
     {
         get { return chance; }
     }
-    public float Multiplicator
+    public float DMGMultiplicator
     {
-        get { return multiplicator; }
-    }
-    public bool All
-    {
-        get { return all; }
+        get { return dmgMultiplicator; }
     }
     public int Charge
     {
         get { return charge; }
     }
+    public bool AOE
+    {
+        get { return aoe; }
+    }
+    public int StatusLength
+    {
+        get { return statusLength; }
+    }
+    public DMGMultiplicatorCondition DMGMultiplicatorCondition
+    {
+        get { return dmgMultiplicatorCondition; }
+    }
+    public float HPConditionValue
+    {
+        get { return hpConditionValue; }
+    }
+    public bool Heal
+    {
+        get { return heal; }
+    }
+    public float HealMultiplier
+    {
+        get { return healMultiplier; }
+    }
+    public bool Buff
+    {
+        get { return buff; }
+    }
+    public bool Debuff
+    {
+        get { return debuff; }
+    }
+    public bool Status
+    {
+        get { return status; }
+    }
+}
+
+[System.Serializable]
+public class MoveEffects
+{
+    [SerializeField] List<StatBoost> boosts;
+
+    public List<StatBoost> Boosts
+    {
+        get { return boosts; }
+    }
+}
+
+[System.Serializable]
+public class StatBoost
+{
+    public Stat stat;
+    public int boost;
+}
+
+public enum MoveTarget
+{
+    Enemy, Self
 }
 
 public enum MoveType
 {
-    Test,
+    None,
     Physical,
     Electric,
     Fire,
@@ -103,4 +183,13 @@ public enum MoveEffect
     Focus,
     Block,
     Heal,
+}
+
+public enum DMGMultiplicatorCondition
+{
+    None,
+    AboveEnemyHP,
+    BelowEnemyHP,
+    AbovePlayerHP,
+    BelowPlayerHP,
 }

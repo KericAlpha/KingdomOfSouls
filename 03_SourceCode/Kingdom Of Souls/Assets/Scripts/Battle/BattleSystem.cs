@@ -60,11 +60,38 @@ public class BattleSystem : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
-        yield return enemyHud.UpdateHP();
-        yield return playerHud.UpdateMana();
+        if(move.MoveBase.MoveType == MoveType.Status)
+        {
+            var effects = move.MoveBase.Effects;
+            if(effects.Boosts != null)
+            {
+                bool moveSuccess = playerUnit.Unit.LowerMana(move);
 
-        if(isDead)
+                if(moveSuccess)
+                {
+                    if (move.MoveBase.Target == MoveTarget.Self)
+                    {
+                        playerUnit.Unit.ApplyBoosts(effects.Boosts);
+                    }
+                    else
+                    {
+                        enemyUnit.Unit.ApplyBoosts(effects.Boosts);
+                    }
+
+                    yield return playerHud.UpdateMana();
+                }
+            }
+        }
+        else
+        {
+            bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
+            yield return enemyHud.UpdateHP();
+            yield return playerHud.UpdateMana();
+        }
+
+        
+
+        if(enemyUnit.Unit.HP <= 0)
         {
             yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} is dead");
         }

@@ -19,9 +19,16 @@ MonoBehaviour:
   power: 80
   accuracy: 90
   manaCost: 70
-  AOE: 0
+  aoe: 0
+  charge: 0
   effect: 0
   chance: 0
-  multiplicator: 1.5
-  all: 0
-  charge: 0
+  statusLength: 0
+  dmgMultiplicator: 1.5
+  dmgMultiplicatorCondition: 1
+  hpConditionValue: 100
+  heal: 0
+  healMultiplier: 0
+  buff: 0
+  debuff: 0
+  status: 0
