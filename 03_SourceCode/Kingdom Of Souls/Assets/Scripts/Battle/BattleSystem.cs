@@ -33,7 +33,19 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogue(enemyUnit.Unit.UnitBase.Name + ". Who is this random? SLANDER HIM!");
         yield return new WaitForSeconds(1f);
 
-        PlayerAction();
+        ChooseFirstTurn();
+    }
+
+    public void ChooseFirstTurn()
+    {
+        if(playerUnit.Unit.Speed >= enemyUnit.Unit.Speed)
+        {
+            PlayerAction();
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
     }
 
     public void PlayerAction()
@@ -62,26 +74,9 @@ public class BattleSystem : MonoBehaviour
 
         if(move.MoveBase.MoveType == MoveType.Status)
         {
-            var effects = move.MoveBase.Effects;
-            if(effects.Boosts != null)
-            {
-                bool moveSuccess = playerUnit.Unit.LowerMana(move);
-
-                if(moveSuccess)
-                {
-                    if (move.MoveBase.Target == MoveTarget.Self)
-                    {
-                        playerUnit.Unit.ApplyBoosts(effects.Boosts);
-                    }
-                    else
-                    {
-                        enemyUnit.Unit.ApplyBoosts(effects.Boosts);
-                    }
-
-                    yield return playerHud.UpdateMana();
-                }
-            }
+            yield return RunMoveEffects(move, playerUnit.Unit, enemyUnit.Unit);
         }
+        
         else
         {
             bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
@@ -89,11 +84,23 @@ public class BattleSystem : MonoBehaviour
             yield return playerHud.UpdateMana();
         }
 
-        
 
-        if(enemyUnit.Unit.HP <= 0)
+        if (enemyUnit.Unit.HP <= 0)
         {
             yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} is dead");
+            playerUnit.Unit.OnBattleOver();
+        }
+
+        playerUnit.Unit.OnAfterTurn();
+        yield return ShowStatusChanges(playerUnit.Unit);
+        yield return playerHud.UpdateHP();
+        
+        // watch video from beginning i would say -> try to implement party asap
+
+        if (playerUnit.Unit.HP <= 0)
+        {
+            yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} is dead");
+            playerUnit.Unit.OnBattleOver();
         }
         else
         {
@@ -118,10 +125,57 @@ public class BattleSystem : MonoBehaviour
         if (isDead)
         {
             yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} is dead");
+            playerUnit.Unit.OnBattleOver();
         }
         else
         {
             PlayerAction();
+        }
+    }
+
+    IEnumerator RunMoveEffects(Move move, Unit source, Unit target)
+    {
+        var effects = move.MoveBase.Effects;
+
+        // Stat Boosting
+        if (effects.Boosts != null)
+        {
+            bool moveSuccess = source.LowerMana(move);
+
+            if (moveSuccess)
+            {
+                if (move.MoveBase.Target == MoveTarget.Self)
+                {
+                    source.ApplyBoosts(effects.Boosts);
+                }
+                else
+                {
+                    target.ApplyBoosts(effects.Boosts);
+                }
+
+                yield return playerHud.UpdateMana();
+                yield return enemyHud.UpdateMana();
+            }  
+        }
+
+        // Status 
+        if(effects.Status != ConditionID.NONE)
+        {
+            target.SetStatus(effects.Status);
+        }
+
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
+    }
+
+    IEnumerator ShowStatusChanges(Unit unit)
+    {
+        while(unit.StatusChanges.Count > 0)
+        {
+            var message = unit.StatusChanges.Dequeue();
+            yield return dialogueBox.TypeDialogue(message);
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -190,7 +244,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Unit.Moves[currentMove]);
 
-        if(Input.GetKeyDown(KeyCode.Z) && playerUnit.Unit.Mana >= playerUnit.Unit.Moves[currentMove].ManaCost)
+        if(Input.GetKeyDown(KeyCode.Z) && playerUnit.Unit.HasEnoughMana(playerUnit.Unit.Moves[currentMove]))
         {
             dialogueBox.EnableMoveSelectorText(false);
             dialogueBox.EnableDialogueText(true);

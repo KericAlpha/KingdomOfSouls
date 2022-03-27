@@ -71,6 +71,10 @@ public class UnitBase : ScriptableObject
     {
         get { return speed; }
     }
+    public int Accuracy
+    {
+        get { return 100; }
+    }
     public List<LearnableMove> LearnableMoves
     {
         get { return learnableMoves; }
@@ -117,6 +121,7 @@ public enum Stat
 {
     Attack,
     Defense,
-    Speed
+    Speed,
+    Accuracy
 }
 

@@ -23,6 +23,9 @@ public class Unit
     public List<Move> Moves { get; set; }
     public Dictionary<Stat, int> Stats { get; private set; }
     public Dictionary<Stat, int> StatBoosts { get; private set; }
+    public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+    public Condition Status { get; private set; }
+    public bool ChangeHP { get; set; }
 
 
     public Unit(UnitBase uBase, int level)
@@ -45,12 +48,7 @@ public class Unit
         HP = MaxHP;
         Mana = MaxMana;
 
-        StatBoosts = new Dictionary<Stat, int>()
-        {
-            {Stat.Attack, 0},
-            {Stat.Defense, 0},
-            {Stat.Speed, 0}
-        };
+        ResetStatBoosts();
     }
 
     /*public void Init()
@@ -66,27 +64,51 @@ public class Unit
         Stats.Add(Stat.Attack, UnitBase.Damage * this.Level);
         Stats.Add(Stat.Defense, UnitBase.Defense * this.Level);
         Stats.Add(Stat.Speed, UnitBase.Speed * this.Level);
+        Stats.Add(Stat.Accuracy, 100);
 
         MaxHP = UnitBase.MaxHP * this.Level;
         MaxMana = UnitBase.MaxMana * this.Level;
+    }
+
+    void ResetStatBoosts()
+    {
+        StatBoosts = new Dictionary<Stat, int>()
+        {
+            {Stat.Attack, 0},
+            {Stat.Defense, 0},
+            {Stat.Speed, 0},
+            {Stat.Accuracy, 0}
+        };
     }
 
     int GetStat(Stat stat)
     {
         int statVal = Stats[stat];
 
-        // Apply Stat Boost
-        int boost = StatBoosts[stat];
-        var boostValues = new float[] {1F, 1.5F, 2F, 2.5F, 3F };
-
-        if(boost >= 0)
+        
+        if(stat == Stat.Accuracy)
         {
-            statVal = Mathf.FloorToInt(statVal * boostValues[boost]);
+            // Increase or Lower Accuracy
+            statVal += (10 * StatBoosts[stat]);
         }
+
         else
         {
-            statVal = Mathf.FloorToInt(statVal / boostValues[-boost]);
+            // Apply Stat Boost
+            int boost = StatBoosts[stat];
+            var boostValues = new float[] { 1F, 1.5F, 2F, 2.5F, 3F };
+
+            if (boost >= 0)
+            {
+                statVal = Mathf.FloorToInt(statVal * boostValues[boost]);
+            }
+            else
+            {
+                statVal = Mathf.FloorToInt(statVal / boostValues[-boost]);
+            }
         }
+
+        
 
         return statVal;
     }
@@ -99,6 +121,15 @@ public class Unit
             var boost = statBoost.boost;
 
             StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -4, 4);
+
+            if(boost > 0)
+            {
+                StatusChanges.Enqueue($"{UnitBase.Name}'s {stat} increased.");
+            }
+            else
+            {
+                StatusChanges.Enqueue($"{UnitBase.Name}'s {stat} decreased.");
+            }
 
             Debug.Log("stat boost work");
         }
@@ -125,88 +156,98 @@ public class Unit
         get { return GetStat(Stat.Speed); }
     }
 
+    public int Accuracy 
+    {
+        get { return GetStat(Stat.Accuracy); }
+    }
+
     public MoveType hasWall = MoveType.None;
 
     public int focus = 0;
 
     public bool TakeDamage(Move move, Unit attacker)
     {
-        if(move.MoveBase.MoveType != MoveType.Status)
+
+        float typemultiplier = 1F;
+        float rngdamage = Random.Range(0.9F, 1F);
+        float critical = 1F;
+
+        // Critical Hit Check
+        if (Random.value * 100F <= 5F)
         {
-            float typemultiplier = 1F;
-            float rngdamage = Random.Range(0.9F, 1F);
-            float critical = 1F;
+            critical = 2F;
 
-            if (Random.value * 100F <= 5F)
-            {
-                critical = 2F;
-
-                // do animation if it is a crit
-            }
-
-            if (this.UnitBase.Weakness.Contains(move.MoveBase.MoveType))
-            {
-                typemultiplier += 0.5F;
-            }
-
-            if (this.UnitBase.Resistance.Contains(move.MoveBase.MoveType))
-            {
-                typemultiplier -= 0.5F;
-            }
-
-            
-
-            MoveEffect(move, attacker);
-            float dmgMultiplicator = MoveDMGMultiplicator(move, attacker);
-
-
-            float damageWithoutMultiplicator = (move.MoveBase.Power * 3) * ((float)attacker.Attack / Defense);
-            float multiplicator = typemultiplier * rngdamage * critical * dmgMultiplicator;
-            int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
-
-            // Debug.Log(damage);
-            // Debug.Log("Before " + attacker.UnitBase.Name + attacker.UnitBase.Name);
-
-            if(Random.value * 100F <= move.MoveBase.Accuracy)
-            {
-                if(hasWall == move.MoveBase.MoveType)
-                {
-                    hasWall = MoveType.None;
-                }
-                else
-                {
-                    HP = HP - damage;
-                }
-            }
-
-            attacker.Mana -= move.ManaCost;
-
-            // Debug.Log(Mana);
-
-            if (HP <= 0)
-            {
-                HP = 0;
-                return true;
-            }
-
-            return false;
+            // do animation if it is a crit
         }
 
-        else
+        // If Defender is weak to the move -> deal more damage
+        if (this.UnitBase.Weakness.Contains(move.MoveBase.MoveType))
         {
-
+            typemultiplier += 0.5F;
         }
 
+        // If Defender is strong to the move -> deal less damage
+        if (this.UnitBase.Resistance.Contains(move.MoveBase.MoveType))
+        {
+            typemultiplier -= 0.5F;
+        }
+
+        // Checks if move is Focus/Wall/Heal
+        MoveEffect(move, attacker);
+
+        // Implies a Move DMG Multiplicator 
+        float dmgMultiplicator = MoveDMGMultiplicator(move, attacker);
 
 
+        // Calculates the Damage
+        float damageWithoutMultiplicator = (move.MoveBase.Power * 3) * ((float)attacker.Attack / Defense);
+        float multiplicator = typemultiplier * rngdamage * critical * dmgMultiplicator;
+        int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
+
+        // Debug.Log(damage);
+        // Debug.Log("Before " + attacker.UnitBase.Name + attacker.UnitBase.Name);
+
+        // Debug.Log(attacker.UnitBase.Name + " Accuracy: "  + move.MoveBase.Accuracy * (attacker.Accuracy / 100F));
+
+        // Calculates if the move hits
+        if(Random.value * 100F <= move.MoveBase.Accuracy * (attacker.Accuracy / 100F))
+        {
+            // If the Defender has a Wall of the Moves Type -> deal no Damage
+            if(hasWall == move.MoveBase.MoveType)
+            {
+                hasWall = MoveType.None;
+            }
+            else
+            {
+                UpdateHP(damage);
+            }
+        }
+
+        attacker.LowerMana(move);
+
+        // Debug.Log(Mana);
+
+        //Checks if Defender has more than 0 HP
+        if (HP <= 0)
+        {
+            // Defender is dead -> return true
+            return true;
+        }
+
+        // Defender is alive -> return false
         return false;
+    }
+
+    public bool HasEnoughMana(Move move)
+    {
+        return this.Mana >= move.ManaCost;
     }
 
     public bool LowerMana(Move move)
     {
-        // return true if enough mana for move, false if not enough mana, all in all lower mana if move is possible to use
+        // Return true if enough Mana for Move, false if not enough Mana, all in all lower Mana if Move is possible to use
 
-        if(this.Mana >= move.ManaCost)
+        if(HasEnoughMana(move))
         {
             this.Mana -= move.ManaCost;
             return true;
@@ -215,10 +256,32 @@ public class Unit
         return false;
     }
 
+    public void UpdateHP(int damage)
+    {
+        HP = Mathf.Clamp(HP - damage, 0, MaxHP);
+        ChangeHP = true;
+    }
+
+    public void SetStatus(ConditionID conditionID)
+    {
+        Status = ConditionDB.Conditions[conditionID];
+        StatusChanges.Enqueue($"{UnitBase.Name} {Status.StartMessage}");
+    }
+
     public Move GetRandomMove()
     {
         int random = Random.Range(0, Moves.Count);
         return Moves[random];
+    }
+
+    public void OnAfterTurn()
+    {
+        Status?.OnAfterTurn?.Invoke(this);
+    }
+
+    public void OnBattleOver()
+    {
+        ResetStatBoosts();
     }
 
     public void MoveEffect(Move move, Unit attacker)
@@ -226,51 +289,6 @@ public class Unit
         switch (move.MoveBase.MoveEffect)
         {
             case global::MoveEffect.None:
-                break;
-
-            case global::MoveEffect.Random_Effect:
-                break;
-
-            case global::MoveEffect.Bleed:
-                break;
-
-            case global::MoveEffect.Burn:
-                break;
-
-            case global::MoveEffect.Freeze:
-                break;
-
-            case global::MoveEffect.Paralyze:
-                break;
-
-            case global::MoveEffect.B_All:
-                break;
-
-            case global::MoveEffect.B_Accuracy:
-                break;
-
-            case global::MoveEffect.B_DEF:
-                break;
-
-            case global::MoveEffect.B_DMG:
-                break;
-
-            case global::MoveEffect.B_SPEED:
-                break;
-
-            case global::MoveEffect.DB_All:
-                break;
-
-            case global::MoveEffect.S_E_Accuracy:
-                break;
-
-            case global::MoveEffect.S_E_DEF:
-                break;
-
-            case global::MoveEffect.S_E_DMG:
-                break;
-
-            case global::MoveEffect.S_E_SPEED:
                 break;
 
             case global::MoveEffect.Focus:
@@ -290,8 +308,12 @@ public class Unit
     {
         bool meetsCondition = false;
 
+        // If the Move has a DMG Multiplicator Condition
+
         if (move.MoveBase.DMGMultiplicatorCondition != DMGMultiplicatorCondition.None)
         {
+            // Checks if the Condition is met
+
             if (this.HP / this.MaxHP <= move.MoveBase.HPConditionValue/100F && move.MoveBase.DMGMultiplicatorCondition == DMGMultiplicatorCondition.BelowEnemyHP)
             {
                 meetsCondition = true;
@@ -305,8 +327,12 @@ public class Unit
 
         if (meetsCondition)
         {
+            // Returns the Multiplicator if Condition is met
+
             return move.MoveBase.DMGMultiplicator;
         }
+
+        // Returns 1F as a Multiplicator if no Condition is met
 
         return 1F;
     }
