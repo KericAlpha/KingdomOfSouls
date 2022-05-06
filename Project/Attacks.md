@@ -204,7 +204,7 @@ Apollos Appearance, 0, 100, 500, Single Target Heal Multiplicator = 1.8
 
 Lighter, 0, 70, 250, burns the enemy
 
-Taser, 0, 70, 250, paralyze the enemy
+Shocker, 0, 70, 250, paralyze the enemy
 
 Ice Cube, 0, 70, 250, freeze the enemy 
 

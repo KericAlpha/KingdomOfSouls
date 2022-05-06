@@ -7,8 +7,6 @@ public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit;
     [SerializeField] BattleUnit enemyUnit;
-    [SerializeField] BattleHud playerHud;
-    [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialogueBox dialogueBox;
     [SerializeField] PartyScreen partyScreen;
 
@@ -33,8 +31,6 @@ public class BattleSystem : MonoBehaviour
     {
         playerUnit.Setup(playerParty.GetNotFaintedUnit());
         enemyUnit.Setup(enemy);
-        playerHud.SetData(playerUnit.Unit);
-        enemyHud.SetData(enemyUnit.Unit);
 
         partyScreen.Init();
 
@@ -43,12 +39,31 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogue($"What is {enemyUnit.Unit.UnitBase.Name} doing here?");
         yield return new WaitForSeconds(1f);
 
-        PlayerAction();
+        ChooseFirstTurn();
     }
 
-    void PlayerAction()
+    void ChooseFirstTurn()
     {
-        state = BattleState.PlayerAction;
+        if(playerUnit.Unit.Speed >= enemyUnit.Unit.Speed)
+        {
+            ActionSelection();
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
+    }
+
+    void BattleOver(bool won)
+    {
+        state = BattleState.BattleOver;
+        playerParty.Units.ForEach(unit => unit.OnBattleOver());
+        OnBattleOver(won);
+    }
+
+    void ActionSelection()
+    {
+        state = BattleState.ActionSelection;
         StartCoroutine(dialogueBox.TypeDialogue("Choose an action"));
         dialogueBox.EnableActionSelector(true);
     }
@@ -60,34 +75,24 @@ public class BattleSystem : MonoBehaviour
         partyScreen.gameObject.SetActive(true);  
     }
 
-    void PlayerMove()
+    void MoveSelection()
     {
-        state = BattleState.PlayerMove;
+        state = BattleState.MoveSelection;
+        currentAction = 0;
+        currentMove = 0;
         dialogueBox.EnableActionSelector(false);
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PerformPlayerMove()
+    IEnumerator PlayerMove()
     {
-        state = BattleState.Busy;
+        state = BattleState.PerformMove;
         var move = playerUnit.Unit.Moves[currentMove];
 
-        yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
-        yield return new WaitForSeconds(1f);
+        yield return RunMove(playerUnit, enemyUnit, move);
 
-        bool isDead = enemyUnit.Unit.TakeDamage(move, playerUnit.Unit);
-        yield return enemyHud.UpdateHP();
-        yield return playerHud.UpdateMana();
-
-        if (isDead)
-        {
-            yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} has been slain");
-
-            yield return new WaitForSeconds(2f);
-            OnBattleOver(true);
-        }
-        else
+        if(state == BattleState.PerformMove)
         {
             StartCoroutine(EnemyMove());
         }
@@ -95,48 +100,132 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemyMove()
     {
-        state = BattleState.EnemyMove;
+        state = BattleState.PerformMove;
 
         var move = enemyUnit.Unit.GetRandomMove();
 
-        yield return dialogueBox.TypeDialogue($"{enemyUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
+        yield return RunMove(enemyUnit, playerUnit, move);
+
+        if (state == BattleState.PerformMove)
+        {
+            ActionSelection();
+        }
+    }
+
+    IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
+    {
+        state = BattleState.PerformMove;
+
+        bool canRunMove = sourceUnit.Unit.OnBeforeMove();
+        if(!canRunMove)
+        {
+            yield return ShowStatusChanges(sourceUnit.Unit);
+            yield break;
+        }
+        yield return ShowStatusChanges(sourceUnit.Unit);
+
+        sourceUnit.Unit.DecreaseMana(move.ManaCost);
+
+        yield return dialogueBox.TypeDialogue($"{sourceUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
         yield return new WaitForSeconds(1f);
 
-        bool isDead = playerUnit.Unit.TakeDamage(move, enemyUnit.Unit);
-        yield return playerHud.UpdateHP();
-        yield return enemyHud.UpdateMana();
-
-        if (isDead)
+        if(move.MoveBase.MoveCategory == MoveCategory.Status)
         {
-            yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} has been slain");
+            yield return RunMoveEffects(move, sourceUnit.Unit, targetUnit.Unit);
+            yield return sourceUnit.Hud.UpdateMana();
+        }
+        else
+        {
+            bool isDead = targetUnit.Unit.TakeDamage(move, sourceUnit.Unit);
+            yield return targetUnit.Hud.UpdateHP();
+            yield return sourceUnit.Hud.UpdateMana();
+        }
 
+        if (targetUnit.Unit.HP <= 0)
+        {
+            yield return dialogueBox.TypeDialogue($"{targetUnit.Unit.UnitBase.Name} has been slain");
             yield return new WaitForSeconds(2f);
 
+            CheckForBattleOver(targetUnit);
+        }
 
+        // Status may damage sourceUnit and that can lead to the sourceUnit being dead
+        sourceUnit.Unit.OnAfterTurn();
+        yield return ShowStatusChanges(sourceUnit.Unit);
+        yield return sourceUnit.Hud.UpdateHP();
+
+        if (sourceUnit.Unit.HP <= 0)
+        {
+            yield return dialogueBox.TypeDialogue($"{sourceUnit.Unit.UnitBase.Name} has been slain");
+            yield return new WaitForSeconds(2f);
+
+            CheckForBattleOver(sourceUnit);
+        }
+    }
+
+    IEnumerator RunMoveEffects(Move move, Unit source, Unit target)
+    {
+        var effects = move.MoveBase.MoveEffects;
+        // Stat Boosting
+        if (move.MoveBase.MoveEffects.Boosts != null)
+        {
+            if (move.MoveBase.Target == MoveTarget.Self)
+            {
+                source.ApplyBoosts(effects.Boosts);
+            }
+            else
+            {
+                target.ApplyBoosts(effects.Boosts);
+            }
+        }
+
+        // Status Condition
+        if(effects.Status != ConditionID.none)
+        {
+            target.SetStatus(effects.Status);
+        }
+
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
+    }
+
+    IEnumerator ShowStatusChanges(Unit unit)
+    {
+        while(unit.StatusChanges.Count > 0)
+        {
+            var message = unit.StatusChanges.Dequeue();
+            yield return dialogueBox.TypeDialogue(message);
+        }
+    }
+
+    void CheckForBattleOver(BattleUnit faintedUnit)
+    {
+        if(faintedUnit.IsPlayerUnit)
+        {
             var nextUnit = playerParty.GetNotFaintedUnit();
-            if(nextUnit != null)
+            if (nextUnit != null)
             {
                 OpenPartyScreen();
             }
             else
             {
-                OnBattleOver(false);
+                BattleOver(false);
             }
         }
         else
         {
-            PlayerAction();
+            BattleOver(true);
         }
     }
 
     public void HandleUpdate()
     {
-        if(state == BattleState.PlayerAction)
+        if(state == BattleState.ActionSelection)
         {
             HandleActionSelection();
         }
 
-        else if(state == BattleState.PlayerMove)
+        else if(state == BattleState.MoveSelection)
         {
             HandleMoveSelection();
         }
@@ -174,7 +263,7 @@ public class BattleSystem : MonoBehaviour
             if(currentAction == 0)
             {
                 // Fight
-                PlayerMove();
+                MoveSelection();
             }
             else if(currentAction == 1)
             {
@@ -215,13 +304,13 @@ public class BattleSystem : MonoBehaviour
         {
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);
-            StartCoroutine(PerformPlayerMove());
+            StartCoroutine(PlayerMove());
         }
         else if(Input.GetKeyDown(KeyCode.F))
         {
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);
-            PlayerAction();
+            ActionSelection();
         }
     }
 
@@ -269,27 +358,35 @@ public class BattleSystem : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.F))
         {
             partyScreen.gameObject.SetActive(false);
-            PlayerAction(); 
+            ActionSelection(); 
         }
     }
 
     IEnumerator SwitchPartyMember(Unit newUnit)
     {
+        bool currentUnitDead = true;
         if(playerUnit.Unit.HP > 0)
         {
+            currentUnitDead = false;
             yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} is switching");
             yield return new WaitForSeconds(1f);
         }
 
         playerUnit.Setup(newUnit);
-        playerHud.SetData(newUnit);
 
         dialogueBox.SetMoveNames(newUnit.Moves);
 
         yield return dialogueBox.TypeDialogue($"Boom waddup {newUnit.UnitBase.Name} here.");
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(EnemyMove());
+        if(currentUnitDead)
+        {
+            ChooseFirstTurn();
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
     }
 }
 
@@ -297,5 +394,5 @@ public class BattleSystem : MonoBehaviour
 
 public enum BattleState
 {
-    Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen
+    Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver
 }

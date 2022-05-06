@@ -116,3 +116,8 @@ public enum UnitType
     Supporter,
     Undead
 }
+
+public enum Stat
+{
+    Attack, Defense, Speed, Accuracy
+}

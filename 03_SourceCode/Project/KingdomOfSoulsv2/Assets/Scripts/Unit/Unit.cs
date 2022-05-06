@@ -22,11 +22,16 @@ public class Unit
     public int Mana { get; set; }
     public List<Move> Moves { get; set; }
 
+    public Dictionary<Stat, int> Stats { get; private set; }
+
+    public Dictionary<Stat, int> StatBoosts { get; private set; }
+
+    public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+    public Condition Status { get; private set; }
+    public bool HPChanged { get; set; }
+
     public void Init()
     {
-        HP = MaxHP;
-        Mana = MaxMana;
-
         Moves = new List<Move>();
 
         // Generate Moves
@@ -37,32 +42,102 @@ public class Unit
                 Moves.Add(new Move(move.MoveBase));
             }
         }
+
+        CalculateStats();
+
+        HP = MaxHP;
+        Mana = MaxMana;
+
+        ResetStatBoosts();
     }
+
+    public void CalculateStats()
+    {
+        Stats = new Dictionary<Stat, int>();
+        Stats.Add(Stat.Attack, UnitBase.Damage * this.Level);
+        Stats.Add(Stat.Defense, UnitBase.Defense * this.Level);
+        Stats.Add(Stat.Speed, UnitBase.Speed * this.Level);
+        Stats.Add(Stat.Accuracy, 100);
+
+        MaxHP = UnitBase.MaxHP * this.Level;
+        MaxMana = UnitBase.MaxMana * this.Level;
+    }
+
+    void ResetStatBoosts()
+    {
+        StatBoosts = new Dictionary<Stat, int>()
+        {
+            {Stat.Attack, 0 },
+            {Stat.Defense, 0 },
+            {Stat.Speed, 0 },
+            {Stat.Accuracy, 0 }
+        };
+    }
+
+    public int GetStat(Stat stat)
+    {
+        int statValue = Stats[stat];
+
+        int boost = StatBoosts[stat];
+        var boostValues = new float[] { 1f, 1.5f, 2f, 2.5f, 3f };
+
+        if(boost >= 0)
+        {
+            statValue = Mathf.FloorToInt(statValue * boostValues[boost]);
+        }
+        else
+        {
+            statValue = Mathf.FloorToInt(statValue / boostValues[-boost]);
+        }
+
+        return statValue;
+    }
+
+    public void ApplyBoosts(List<StatBoost> statBoosts)
+    {
+        foreach(var statBoost in statBoosts)
+        {
+            var stat = statBoost.stat;
+            var boost = statBoost.boost;
+
+            StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -6, 6);
+
+            if(boost > 0)
+            {
+                StatusChanges.Enqueue($"{UnitBase.Name}'s {stat} increased");
+            }
+            else
+            {
+                StatusChanges.Enqueue($"{UnitBase.Name}'s {stat} decreased");
+            }
+        }
+    }
+        
 
     public int Attack
     {
-        get { return UnitBase.Damage * this.Level; }
+        get { return GetStat(Stat.Attack); }
     }
     public int Defense
     {
-        get { return UnitBase.Defense * this.Level; }
+        get { return GetStat(Stat.Defense); }
     }
     public int MaxHP
     {
-        get { return UnitBase.MaxHP * this.Level; } 
+        get; private set;
     }
     public int MaxMana
     {
-        get { return UnitBase.MaxMana * this.Level; } 
+        get; private set;
     }
     public int Speed
     {
-        get { return UnitBase.Speed * this.Level; }
+        get { return GetStat(Stat.Speed); }
     }
 
     public int Accuracy
     {
-        get { return UnitBase.Accuracy * this.Level; }
+        get { return GetStat(Stat.Accuracy); }
     }
 
     public bool TakeDamage(Move move, Unit attacker)
@@ -93,16 +168,37 @@ public class Unit
         float multiplicator = typemultiplier * rngdamage * critical * dmgMultiplicator;
         int damage = Mathf.FloorToInt(damageWithoutMultiplicator * multiplicator);
 
-        HP -= damage;
-        attacker.Mana -= move.ManaCost;
-
+        UpdateHP(damage);
         if(HP <= 0)
         {
-            HP = 0;
             return true;
         }
 
+        // als return vielleicht eine klasse mitgeben, die werte wie fainted, critical und iseffective hat, damit wir später beim animieren wissen, ob es vielleicht doch ein crit war
+
         return false;
+    }
+
+    public void SetStatus(ConditionID conditionID)
+    {
+        Status = ConditionsDB.conditions[conditionID];
+        StatusChanges.Enqueue($"{UnitBase.Name} {Status.StartMessage}");
+    }
+
+    public void CureStatus()
+    {
+        Status = null;
+    }
+
+    public void DecreaseMana(int manaCost)
+    {
+        Mana -= manaCost;
+    }
+
+    public void UpdateHP(int damage)
+    {
+        HP = Mathf.Clamp(HP - damage, 0, MaxHP);
+        HPChanged = true;
     }
 
     public Move GetRandomMove()
@@ -110,5 +206,25 @@ public class Unit
         int random = Random.Range(0, Moves.Count);
 
         return Moves[random];
+    }
+
+    public void OnAfterTurn()
+    {
+        Status?.OnAfterTurn?.Invoke(this);
+    }
+
+    public bool OnBeforeMove()
+    {
+        if(Status?.OnBeforeMove != null)
+        {
+            return Status.OnBeforeMove(this);
+        }
+
+        return true;
+    }
+
+    public void OnBattleOver()
+    {
+        ResetStatBoosts();
     }
 }

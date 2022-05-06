@@ -18,3 +18,9 @@ MonoBehaviour:
   power: 0
   accuracy: 90
   manaCost: 40
+  moveCategory: 1
+  moveEffects:
+    boosts:
+    - stat: 3
+      boost: -1
+  target: 0
