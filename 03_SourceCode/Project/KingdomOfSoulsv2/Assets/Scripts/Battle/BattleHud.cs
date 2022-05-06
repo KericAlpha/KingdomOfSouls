@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleHud : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class BattleHud : MonoBehaviour
     [SerializeField] TMP_Text levelText;
     [SerializeField] HPBar hpBar;
     [SerializeField] ManaBar manaBar;
+    [SerializeField] Image statusIcon1;
+    [SerializeField] Image statusIcon2;
+    [SerializeField] Image statusIcon3;
+    
 
     Unit unit;
 
@@ -22,6 +27,24 @@ public class BattleHud : MonoBehaviour
         hpBar.SetHPText(unit.HP, unit.MaxHP);
         manaBar.SetMana((float)unit.Mana / unit.MaxMana);
         manaBar.SetManaText(unit.Mana, unit.MaxMana);
+    }
+
+    public void SetStatusIcon()
+    {
+        if(unit.StatusL.Count == 0)
+        {
+            statusIcon1.enabled = false;
+            statusIcon2.enabled = false;
+            statusIcon3.enabled = false;
+        }
+        else
+        {
+            // find a fix to this shit 
+            statusIcon1.enabled = true;
+            statusIcon1.sprite = Resources.Load<Sprite>("Art/Battle/Burn_Icon");
+            Debug.Log("test");
+            Debug.Log(unit.StatusL.Count);
+        }
     }
 
     public IEnumerator UpdateHP()

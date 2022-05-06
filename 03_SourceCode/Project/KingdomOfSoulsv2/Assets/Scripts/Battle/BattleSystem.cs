@@ -146,6 +146,8 @@ public class BattleSystem : MonoBehaviour
         {
             yield return RunMoveEffects(move, sourceUnit.Unit, targetUnit.Unit);
             yield return sourceUnit.Hud.UpdateMana();
+            sourceUnit.Hud.SetStatusIcon();
+            targetUnit.Hud.SetStatusIcon();
         }
         else
         {
