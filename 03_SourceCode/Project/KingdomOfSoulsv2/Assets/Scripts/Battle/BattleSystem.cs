@@ -120,6 +120,19 @@ public class BattleSystem : MonoBehaviour
         if(!canRunMove)
         {
             yield return ShowStatusChanges(sourceUnit.Unit);
+
+            sourceUnit.Unit.OnAfterTurn();
+            yield return ShowStatusChanges(sourceUnit.Unit);
+            yield return sourceUnit.Hud.UpdateHP();
+
+            if (sourceUnit.Unit.HP <= 0)
+            {
+                yield return dialogueBox.TypeDialogue($"{sourceUnit.Unit.UnitBase.Name} has been slain");
+                yield return new WaitForSeconds(2f);
+
+                CheckForBattleOver(sourceUnit);
+            }
+
             yield break;
         }
         yield return ShowStatusChanges(sourceUnit.Unit);
@@ -195,6 +208,7 @@ public class BattleSystem : MonoBehaviour
         {
             var message = unit.StatusChanges.Dequeue();
             yield return dialogueBox.TypeDialogue(message);
+            yield return new WaitForSeconds(1.5f);
         }
     }
 
