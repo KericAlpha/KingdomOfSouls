@@ -10,10 +10,13 @@ public class BattleHud : MonoBehaviour
     [SerializeField] TMP_Text levelText;
     [SerializeField] HPBar hpBar;
     [SerializeField] ManaBar manaBar;
-    [SerializeField] Image statusIcon1;
-    [SerializeField] Image statusIcon2;
-    [SerializeField] Image statusIcon3;
-    
+    [SerializeField] GameObject statusIconOne;
+    [SerializeField] GameObject statusIconTwo;
+    [SerializeField] GameObject statusIconThree;
+    [SerializeField] Sprite burnIcon;
+    [SerializeField] Sprite freezeIcon;
+    [SerializeField] Sprite sleepIcon;
+
 
     Unit unit;
 
@@ -33,15 +36,32 @@ public class BattleHud : MonoBehaviour
     {
         if(unit.StatusL.Count == 0)
         {
-            statusIcon1.enabled = false;
-            statusIcon2.enabled = false;
-            statusIcon3.enabled = false;
+            statusIconOne.SetActive(false);
+            statusIconTwo.SetActive(false);
+            statusIconThree.SetActive(false);
         }
         else
         {
-            // find a fix to this shit 
-            statusIcon1.enabled = true;
-            statusIcon1.sprite = Resources.Load<Sprite>("Art/Battle/Burn_Icon");
+            foreach(Condition status in unit.StatusL)
+            {
+                if(status != null)
+                {
+                    if(!statusIconOne.activeSelf)
+                    {
+
+                    }
+                    else if (!statusIconTwo.activeSelf)
+                    {
+
+                    }
+                    else if(!statusIconThree.activeSelf)
+                    {
+
+                    }
+                }
+            }
+            statusIconOne.SetActive(true);
+            statusIconOne.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Battle/Burn_Icon");
             Debug.Log("test");
             Debug.Log(unit.StatusL.Count);
         }
