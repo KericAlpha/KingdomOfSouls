@@ -28,9 +28,9 @@ Attack (Dark)
 
 Slash, 70, 90, 15, Single Target Attack
 
-Punch, 50, 100, 10, Single Target Attack
+Strike, 50, 100, 10, Single Target Attack
 
-Stab, 25, 90, 5, Single Target Attack
+Pierce, 25, 90, 5, Single Target Attack
 
 ## Electric
 
@@ -58,19 +58,29 @@ Light Burst, 55, 100, 50, AOE Attack
 
 Darkclaw, 65, 90, 30, Single Target Attack
 
-## Status
+## Support
 
-Light, 0, 90, 40, Sinks Enemy Accuracy
+Blind, 0, 90, 40, Sinks Enemy Accuracy
 
-Healcloud, 0, 100, 100, AOE Heal Multiplicator = 1
-
-Healing Hand, 0, 100, 140, Single Target Heal Multiplicator = 1.4
-
-DMG Boost, 0, 100, 100, Self DMG Buff
+Focus, 0, 100, 100, Self DMG Buff
 
 Suit Up, 0, 100, 90, Self DEF Buff
 
 Cobweb, 0, 80, 50, Sinks Enemy Speed
+
+## Heal
+
+Healcloud, 0, 100, 66, AOE Heal Multiplicator = 1
+
+Healing Hand, 0, 100, 85, Single Target Heal Multiplicator = 1.4
+
+## Ailment
+
+Lullaby, 0, 63, 80, casts sleep on one enemy 
+
+Slumbering fog, 0, 40, 110, casts sleep on all enemies
+
+Viper Fangs, 0, 85, 95, casts poison on one foe
 
 ## Mid Game Moves
 
@@ -78,17 +88,19 @@ Cobweb, 0, 80, 50, Sinks Enemy Speed
 
 ## Physical
 
-Horizontal Slash, 80, 90, 50, AOE Attack
+Shadow Strike, 80, 90, 50, AOE Attack
 
-Air Cutter, 50, 85, 15, Single Target Attack
+Air Cutter, 50, 85, 15, Single Target Attack, hits 1-3 times
 
-Heart Stabber, 90, 80, 55, Single Target Attack, may bleed the enemy (excluding skeletons)
+Heart Stabber, 90, 80, 55, Single Target Attack, 15 percent chance for an insta kill
 
 ## Electric
 
-Electric Beam, 80, 90, 50, Single Target Attack, may paralyze the enemy
+Thunder Beam, 80, 90, 50, Single Target Attack, may paralyze the enemy
 
-Weather Cloud, 70, 95, 70, AOE Attack, may paralyze the enemy
+Dark Cloud, 70, 95, 70, AOE Attack, may paralyze the enemy
+
+Lightning Summon , 120, 75, 80, Single Target
 
 ## Fire
 
@@ -100,37 +112,41 @@ Fire Wave, 80, 90, 70, AOE Attack, low chance to burn enemies
 
 ## Ice
 
-Freeze, 50, 60, 60, Single Target Attack, great change to freeze the enemy (1-2 turn)
+Shivering Snowstrike, 50, 60, 60, Single Target Attack, great change to freeze the enemy (1-2 turn)
 
-Ice Arrow, 80, 90, 60, Single Target Attack, may freeze the enemy
+Freezing Arrow, 80, 90, 60, Single Target Attack, may freeze the enemy
 
 ## Light
 
-Light Ray, 60, 90, 50, Single Target Attack
+Ray of Light, 60, 90, 50, Single Target Attack
 
 Sacred Sword, 100, 85, 80, Single Target Attack
+
+Salvation, ∞, 50, 200, Instant Kill to all enemies
 
 ## Dark
 
 Eclipse, 75, 90, 65, Single Target Attack, sinks accuracy of the enemy
 
-Demons Scythe, 100, 85, 80, Single Target Attack
+Demon Scythe, 100, 85, 80, Single Target Attack, 20 Percent chance for insta kill
 
-## Status
+Exorcism, ∞, 50, 200, Instant Kill to all enemies
 
-Sharpen, 0, 100, 70, DMG Buff (only for Physical Attackers)
+## Suport
 
-Agility, 0, 100, 90, Speed Buff
+Sharpen, 0, 100, 70, Strength Buff (AOE)
+
+Concentrate, 0, 100, Magic Buff (AOE)
+
+Agility, 0, 100, 90, Speed Buff (AOE)
 
 Taunt, 0, 100, 100, Enemies focus the user
 
-Heavens Blessing, 0, 100, 300, AOE Heal Multiplicator = 1.4
-
 Blue Gambit, 0, 100, 1/4 mana, Recovers 1/2 of your mana for the duration of 8 turns
 
-Exhaust, 0, 100, 150, Debuffs enemy SPEED
+Exhaust, 0, 100, 150, Debuffs enemy SPEED (AOE)
 
-Intimidate, 0, 100, 150, Debuffs enemy DMG 
+Intimidate, 0, 100, 150, Debuffs enemy DMG (AOE)
 
 Barrier, 0, 100, 240, Buffs all allies DEF 
 
@@ -144,19 +160,39 @@ Light Wall, 0, 100, 200, Blocks Light attack (1 time)
 
 Dark Wall, 0, 100, 200, Blocks Dark attack (1 time) 
 
+Planet Veil, 0, 100, 500, Reflects all instant kills unitl end of the Battle (party), doesnt work if hit by an already relfected attack 
+
+## Heal
+
+Heavens Blessing, 1.4, 100, 166, Heals entire Party
+
+Soothing Wave, 0, 100, 166, Fully Heals all allys - casts slumbering fog on party
+
+Calm Melody, 0, 100, 200, Heals entire Party - chance to remove debuffs for each combattant (50%)
+
+## Ailment
+
+Lighter, 0, 70, 250, burns the enemy
+
+Taser, 0, 70, 150, paralyze the enemy
+
+Ice Cube, 0, 70, 150, freeze the enemy 
+
+Accursed Venom, 0, 80, 250, Casts poison (aoe)
+
 ## Late Game Moves
 
 
 
 ## Physical
 
-Wombo Combo, 10, 100, 0, Single Target Attack, Attacks the enemy for 100 Mana until there is not enough left, each hit adds +2 Power
+Fierce Combo, 10, 98, 0, Single Target Attack, Attacks the enemy for 100 Mana until there is not enough left, or the attack misses , each hit adds +2 Power
 
 Final Blow, 90, 85, 80, Single Target Attack, if the enemy has less than 50% HP -> DMG Multiplicator = 1.2
 
 Primal Strike, 80, 90, 70, Single Target Attack, if the enemy is full HP (100% HP) -> DMG Multiplicator = 1.5
 
-Cataclysm, 130, 80, 0, AOE Attack, Cost = 25% own Health
+Cataclysm, 130, 90, 0, AOE Attack, Cost = 25% own Health
 
 ## Electric
 
@@ -172,15 +208,19 @@ Inferno, 90, 80, 100, Single Target Attack, may burn the enemy
 
 Dragon's Breath, 110, 85, 160, Single Target Attack
 
-Nova Burst, 110, 90, 200, AOE Attack, needs 1 turn to charge, may burn the enemy
+Nova Burst, 130, 90, 200, AOE Attack, needs 1 turn to charge, may burn the enemy
+
+, 80, 100, 210, Single Targen Attack- Pierces Resistances and Walls - small chance to burn
 
 ## Ice
 
-Icy Storm, 90, 85, 100, AOE Attack, may freeze the enemies
+Age of ice, 90, 85, 100, AOE Attack, may freeze the enemies
 
 Freezing Gaze, 90, 90, 120, Single Target Attack, great chance to freeze the enemy (1 turn)
 
-Frozen Mallet, 110, 85, 160, Single Target Attack
+Below Zero, 110, 85, 160, Single Target Attack
+
+Eternal Ice, 80, 100, 210, Single Targen Attack- Pierces Resistances and Walls - small chance to freeze
 
 ## Light
 
@@ -188,25 +228,51 @@ Heavens Strike, 110, 85, 150, Single Target Attack
 
 Gods Punishment, 100, 90, 180 AOE Attack
 
+Light of the Empyrean, ∞, 75, 366, Instant Kill to one enemy
+
+Armageddon, 80, 100, 200, Single Target attack - pierces Resistances and Walls
+
 ## Dark
 
 Hells Call, 110, 85, 150, Single Target Attack 
 
 Final Destination, 100, 90, 180, AOE Attack
 
-## Status
+Abyssal Fall , ∞, 75, 366, Instant Kill to one enemy
+
+Morning Star, 80, 100, 200, Single Target attack - pierces Resistances and Walls
+
+Seven Seals, 25, 98, 420, Hits all enemies seven Times - pierces Resistances and Walls
+
+## Support
 
 Allmighty Wall, 0, 100, 400, Blocks any kinds of attack (1 time)
 
-Coin Flip, 0, 100, 333, 50/50 chance to get a strong buff or a debuff/status effect (self) 
+Coin Flip, 0, 100, 50, 50/50 chance to get a strong buff or a debuff/status effect (self) 
 
-Apollos Appearance, 0, 100, 500, Single Target Heal Multiplicator = 1.8
+Last Resort, 0, 100, 20, Maxes all stats (self) - Sets HP to one, healed HP halved for 2 turns
 
-Lighter, 0, 70, 250, burns the enemy
+Wildcard, 0, 100, 266, Covers weakness for 5 turns (party)
 
-Shocker, 0, 70, 250, paralyze the enemy
+Breakdown, 0, 100, 150, Removes certain buffs on enemy (Elemental Wall, Almighty Wall, Plantes Veil, Wildcard)
 
-Ice Cube, 0, 70, 250, freeze the enemy 
+Battle Cry 0, 100, 250, Buffs all stats (party)
+
+Overwhelming Presence, 0, 100, 250, Debuffs all stats (Aoe)
+
+Lightning Speed, 0, 100, 300, Maxes Speed and Accuracy (Self), chance to inflict paralysis on self
+
+## Heal
+
+Apollos Appearance, 0, 100, 250, Fully heals one party member
+
+Lords Blessing, 0, 100, 366, Fully heals entire party
+
+## Ailment
+
+Forbidden Fruit, 0, 60, 350, Inflicts Sleep, Poison, Burn (Single Target) (Accuracy counts for each ailment seperatly)
+
+Forbidden Wine, 0, 60, 455, Inflicts Sleep, Poison, Burn (AOE) (Accuracy counts for each ailment seperatly)
 
 ## Combo Attacks
 
