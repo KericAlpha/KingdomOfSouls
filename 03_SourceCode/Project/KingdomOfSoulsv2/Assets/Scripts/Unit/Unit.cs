@@ -28,7 +28,9 @@ public class Unit
 
     public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
     public Condition Status { get; private set; }
+    public List<Condition> StatusL { get; private set; } = new List<Condition>();
     public bool HPChanged { get; set; }
+    public int StatusCureChance { get; set; } = 0;
 
     public void Init()
     {
@@ -181,13 +183,17 @@ public class Unit
 
     public void SetStatus(ConditionID conditionID)
     {
-        Status = ConditionsDB.conditions[conditionID];
-        StatusChanges.Enqueue($"{UnitBase.Name} {Status.StartMessage}");
+        // Status = ConditionsDB.conditions[conditionID];
+        StatusL.Add(ConditionsDB.conditions[conditionID]);
+
+        StatusChanges.Enqueue($"{UnitBase.Name} {StatusL[StatusL.Count-1].StartMessage}");
     }
 
-    public void CureStatus()
+    public void CureStatus(Condition condition)
     {
-        Status = null;
+        StatusCureChance = 0;
+        StatusL.Remove(condition);
+        // Status = null;
     }
 
     public void DecreaseMana(int manaCost)
@@ -210,16 +216,22 @@ public class Unit
 
     public void OnAfterTurn()
     {
-        Status?.OnAfterTurn?.Invoke(this);
+        foreach(Condition status in StatusL)
+        {
+            status?.OnAfterTurn?.Invoke(this);
+        }
+        // Status?.OnAfterTurn?.Invoke(this);
     }
 
     public bool OnBeforeMove()
     {
-        if(Status?.OnBeforeMove != null)
+        foreach(Condition status in StatusL)
         {
-            return Status.OnBeforeMove(this);
+            if (status?.OnBeforeMove != null)
+            {
+                return status.OnBeforeMove(this);
+            }
         }
-
         return true;
     }
 

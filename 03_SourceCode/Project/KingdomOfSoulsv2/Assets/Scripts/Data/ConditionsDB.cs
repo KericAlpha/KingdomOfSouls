@@ -29,7 +29,7 @@ public class ConditionsDB
                 StartMessage = "has been paralyzed",
                 OnBeforeMove = (Unit unit) =>
                 {
-                    if(Random.Range(1,11) >= 4)
+                    if(Random.Range(1,11) >= 1)
                     {
                         // Will not perform move
                         unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} is paralyzed and can't move");
@@ -51,11 +51,11 @@ public class ConditionsDB
                 StartMessage = "has been frozen",
                 OnBeforeMove = (Unit unit) =>
                 {
-                    if(Random.Range(1,11) >= 4)
+                    if(Random.Range(1,11) >= 5)
                     {
                         // Breaks freeze
                         unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} is not frozen anymore");
-                        unit.CureStatus();
+                        unit.CureStatus(ConditionsDB.conditions[ConditionID.frz]);
                         return true;
                     }
 
@@ -74,16 +74,17 @@ public class ConditionsDB
                 StartMessage = "is sleeping",
                 OnBeforeMove = (Unit unit) =>
                 {
-                    if(Random.Range(1,11) >= 2)
+                    if(Random.Range(1,11) <= 2 + unit.StatusCureChance)
                     {
-                        // Breaks freeze
+                        // Wakes up
                         unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} woke up");
-                        unit.CureStatus();
+                        unit.CureStatus(ConditionsDB.conditions[ConditionID.slp]);
                         return true;
                     }
 
-                    // Still frozen
-                    unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} has sweet dreams");
+                    // Still sleeping
+                    unit.StatusCureChance = Mathf.Clamp(unit.StatusCureChance + 2, 0, 10);
+                    unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} is having sweet dreams");
                     return false;
                 }
 
