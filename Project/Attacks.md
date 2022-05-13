@@ -194,6 +194,8 @@ Primal Strike, 80, 90, 70, Single Target Attack, if the enemy is full HP (100% H
 
 Cataclysm, 130, 90, 0, AOE Attack, Cost = 25% own Health
 
+Sword of Legends, 100 , 87, 100, Single Target - Worsens a Random Elemental Affinity of the Enemy 
+
 ## Electric
 
 Lightning Strike, 110, 90, 170, Single Target Attack, may paralyze the enemy
