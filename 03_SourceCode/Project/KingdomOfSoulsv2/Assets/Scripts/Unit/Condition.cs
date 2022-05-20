@@ -8,7 +8,7 @@ public class Condition
     public string Name { get; set; }
     public string Description { get; set; }
     public string StartMessage { get; set; }
-    // make path for sprite 
+    public string SpritePath { get; set; }  
     public Func<Unit, bool> OnBeforeMove { get; set; }
     public Action<Unit> OnAfterTurn { get; set; }
 }

@@ -13,9 +13,11 @@ public class MoveBase : ScriptableObject
     [SerializeField] MoveType moveType;
     [SerializeField] int power;
     [SerializeField] int accuracy;
+    [SerializeField] bool alwaysHits;
     [SerializeField] int manaCost;
     [SerializeField] MoveCategory moveCategory;
     [SerializeField] MoveEffects moveEffects;
+    [SerializeField] List<SecondaryEffects> secondaryEffects;
     [SerializeField] MoveTarget target;
 
     public string Name
@@ -38,6 +40,10 @@ public class MoveBase : ScriptableObject
     {
         get { return accuracy; }
     }
+    public bool AlwaysHits
+    {
+        get { return alwaysHits; }
+    }
     public int ManaCost
     {
         get { return manaCost; }
@@ -49,6 +55,10 @@ public class MoveBase : ScriptableObject
     public MoveEffects MoveEffects
     {
         get { return moveEffects; }
+    }
+    public List<SecondaryEffects> SecondaryEffects
+    {
+        get { return secondaryEffects; }
     }
     public MoveTarget Target
     {
@@ -69,6 +79,22 @@ public class MoveEffects
     public ConditionID Status
     {
         get { return status; }
+    }
+}
+
+[System.Serializable]
+public class SecondaryEffects : MoveEffects
+{
+    [SerializeField] int chance;
+    [SerializeField] MoveTarget target;
+
+    public int Chance
+    {
+        get { return chance; }
+    }
+    public MoveTarget Target
+    {
+        get { return target; }
     }
 }
 

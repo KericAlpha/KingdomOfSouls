@@ -21,6 +21,7 @@ public class Unit
     public int HP { get; set; }
     public int Mana { get; set; }
     public List<Move> Moves { get; set; }
+    public Move CurrentMove { get; set; }
 
     public Dictionary<Stat, int> Stats { get; private set; }
 
@@ -102,7 +103,7 @@ public class Unit
             var stat = statBoost.stat;
             var boost = statBoost.boost;
 
-            StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -6, 6);
+            StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -5, 5);
 
             if(boost > 0)
             {

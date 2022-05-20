@@ -28,17 +28,9 @@ MonoBehaviour:
     levelToLearn: 1
   - moveBase: {fileID: 11400000, guid: 39bfb5a4da40ed04882c6ba33db56c29, type: 2}
     levelToLearn: 3
-  - moveBase: {fileID: 11400000, guid: 7659734f04bf03f4a90e9387e5161755, type: 2}
-    levelToLearn: 5
-  - moveBase: {fileID: 11400000, guid: d59a68031fccccc4cbbec85f30401c75, type: 2}
-    levelToLearn: 5
   - moveBase: {fileID: 11400000, guid: 084d62e5bce7bdd41898d916ac889325, type: 2}
     levelToLearn: 5
   - moveBase: {fileID: 11400000, guid: 0b4537b232cc6a644ace3ebd560b5e61, type: 2}
-    levelToLearn: 5
-  - moveBase: {fileID: 11400000, guid: 06f1512518a09564e8f6aa68c635fe4b, type: 2}
-    levelToLearn: 5
-  - moveBase: {fileID: 11400000, guid: 52e9eeb691202204b9a4a814a2245ba1, type: 2}
     levelToLearn: 5
   resistance: 
   weakness: 

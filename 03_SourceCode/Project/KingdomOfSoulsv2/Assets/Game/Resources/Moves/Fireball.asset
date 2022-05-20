@@ -17,4 +17,15 @@ MonoBehaviour:
   moveType: 3
   power: 120
   accuracy: 90
+  alwaysHits: 0
   manaCost: 50
+  moveCategory: 0
+  moveEffects:
+    boosts: []
+    status: 0
+  secondaryEffects:
+  - boosts: []
+    status: 1
+    chance: 10
+    target: 0
+  target: 0

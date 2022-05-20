@@ -13,6 +13,7 @@ public class BattleHud : MonoBehaviour
     [SerializeField] GameObject statusIconOne;
     [SerializeField] GameObject statusIconTwo;
     [SerializeField] GameObject statusIconThree;
+    [SerializeField] List<GameObject> statusIcons;
     [SerializeField] Sprite burnIcon;
     [SerializeField] Sprite freezeIcon;
     [SerializeField] Sprite sleepIcon;
@@ -36,33 +37,53 @@ public class BattleHud : MonoBehaviour
     {
         if(unit.StatusL.Count == 0)
         {
-            statusIconOne.SetActive(false);
-            statusIconTwo.SetActive(false);
-            statusIconThree.SetActive(false);
+            statusIcons[0].SetActive(false);
+            statusIcons[1].SetActive(false);
+            statusIcons[2].SetActive(false);
         }
         else
         {
+            int index = 0;
             foreach(Condition status in unit.StatusL)
             {
                 if(status != null)
                 {
-                    if(!statusIconOne.activeSelf)
+                    if(!statusIcons[index].activeSelf)
+                    {
+                        statusIcons[index].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(unit.StatusL[index].SpritePath);
+                        statusIcons[index].SetActive(true);
+                        Debug.Log(index + unit.StatusL[index].SpritePath);
+                    }
+                    else if(statusIcons[index].activeSelf)
                     {
 
+                    }
+
+                    /*if (!statusIconOne.activeSelf)
+                    {
+                        statusIconOne.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(unit.StatusL[0].SpritePath);
+                        statusIconOne.SetActive(true);
                     }
                     else if (!statusIconTwo.activeSelf)
                     {
-
+                        statusIconTwo.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(unit.StatusL[1].SpritePath);
+                        statusIconTwo.SetActive(true);
                     }
                     else if(!statusIconThree.activeSelf)
                     {
-
-                    }
+                        statusIconThree.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(unit.StatusL[2].SpritePath);
+                        statusIconThree.SetActive(true);
+                    }*/
                 }
+                else
+                {
+                    statusIcons[index].SetActive(false);
+                }
+                index++;
             }
-            statusIconOne.SetActive(true);
-            statusIconOne.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Battle/Burn_Icon");
-            Debug.Log("test");
+            //statusIconOne.SetActive(true);
+            //statusIconOne.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Battle/Burn_Icon");
+            //Debug.Log("test");
             Debug.Log(unit.StatusL.Count);
         }
     }

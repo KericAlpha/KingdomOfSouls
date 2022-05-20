@@ -13,6 +13,7 @@ public class BattleSystem : MonoBehaviour
     public event Action<bool> OnBattleOver;
 
     BattleState state;
+    BattleState? prevState; 
     int currentAction;
     int currentMove;
     int currentMember; 
@@ -39,20 +40,8 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogue($"What is {enemyUnit.Unit.UnitBase.Name} doing here?");
         yield return new WaitForSeconds(1f);
 
-        ChooseFirstTurn();
-    }
-
-    void ChooseFirstTurn()
-    {
-        if(playerUnit.Unit.Speed >= enemyUnit.Unit.Speed)
-        {
-            ActionSelection();
-        }
-        else
-        {
-            StartCoroutine(EnemyMove());
-        }
-    }
+        ActionSelection();
+    } 
 
     void BattleOver(bool won)
     {
@@ -85,28 +74,55 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PlayerMove()
+    IEnumerator RunTurns(BattleAction playerAction)
     {
-        state = BattleState.PerformMove;
-        var move = playerUnit.Unit.Moves[currentMove];
+        state = BattleState.RunningTurn;
 
-        yield return RunMove(playerUnit, enemyUnit, move);
-
-        if(state == BattleState.PerformMove)
+        if(playerAction == BattleAction.Move)
         {
-            StartCoroutine(EnemyMove());
+            playerUnit.Unit.CurrentMove = playerUnit.Unit.Moves[currentMove];
+            enemyUnit.Unit.CurrentMove = enemyUnit.Unit.GetRandomMove();
+
+            // Chech who is first
+            bool playerGoesFirst = playerUnit.Unit.Speed >= enemyUnit.Unit.Speed;
+
+            var firstUnit = (playerGoesFirst) ? playerUnit : enemyUnit;
+            var secondUnit = (playerGoesFirst) ? enemyUnit : playerUnit;
+
+            var nextUnit = secondUnit.Unit;
+
+            // First Turn 
+            yield return RunMove(firstUnit, secondUnit, firstUnit.Unit.CurrentMove);
+            yield return RunAfterTurn(firstUnit);
+            if (state == BattleState.BattleOver) yield break;
+
+            if(nextUnit.HP > 0)
+            {
+                // Second Turn
+                yield return RunMove(secondUnit, firstUnit, secondUnit.Unit.CurrentMove);
+                yield return RunAfterTurn(secondUnit);
+                if (state == BattleState.BattleOver) yield break;
+            }
+            
         }
-    }
 
-    IEnumerator EnemyMove()
-    {
-        state = BattleState.PerformMove;
+        else
+        {
+            if(playerAction == BattleAction.SwitchPokemon)
+            {
+                var selectedPokemon = playerParty.Units[currentMember];
+                state = BattleState.Busy;
+                yield return SwitchPartyMember(selectedPokemon);
+            }
 
-        var move = enemyUnit.Unit.GetRandomMove();
+            // Enemy Turn
+            var enemyMove = enemyUnit.Unit.GetRandomMove();
+            yield return RunMove(enemyUnit, playerUnit, enemyMove);
+            yield return RunAfterTurn(enemyUnit);
+            if (state == BattleState.BattleOver) yield break;
+        }
 
-        yield return RunMove(enemyUnit, playerUnit, move);
-
-        if (state == BattleState.PerformMove)
+        if(state != BattleState.BattleOver)
         {
             ActionSelection();
         }
@@ -114,7 +130,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move)
     {
-        state = BattleState.PerformMove;
+        state = BattleState.RunningTurn;
 
         bool canRunMove = sourceUnit.Unit.OnBeforeMove();
         if(!canRunMove)
@@ -142,27 +158,86 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogue($"{sourceUnit.Unit.UnitBase.Name} used {move.MoveBase.Name}");
         yield return new WaitForSeconds(1f);
 
-        if(move.MoveBase.MoveCategory == MoveCategory.Status)
+        if(CheckIfMoveHits(move, sourceUnit.Unit, targetUnit.Unit))
         {
-            yield return RunMoveEffects(move, sourceUnit.Unit, targetUnit.Unit);
-            yield return sourceUnit.Hud.UpdateMana();
-            sourceUnit.Hud.SetStatusIcon();
-            targetUnit.Hud.SetStatusIcon();
+            if (move.MoveBase.MoveCategory == MoveCategory.Status)
+            {
+                yield return RunMoveEffects(move.MoveBase.MoveEffects, sourceUnit.Unit, targetUnit.Unit, move.MoveBase.Target);
+                yield return sourceUnit.Hud.UpdateMana();
+                sourceUnit.Hud.SetStatusIcon();
+                targetUnit.Hud.SetStatusIcon();
+            }
+            else
+            {
+                bool isDead = targetUnit.Unit.TakeDamage(move, sourceUnit.Unit);
+                yield return targetUnit.Hud.UpdateHP();
+                yield return sourceUnit.Hud.UpdateMana();
+            }
+
+            if(move.MoveBase.SecondaryEffects != null && move.MoveBase.SecondaryEffects.Count > 0 && targetUnit.Unit.HP > 0)
+            {
+                foreach(var secondeffect in move.MoveBase.SecondaryEffects)
+                {
+                    var random = UnityEngine.Random.Range(1, 101);
+                    if(random <= secondeffect.Chance)
+                    {
+                        yield return RunMoveEffects(secondeffect, sourceUnit.Unit, targetUnit.Unit, secondeffect.Target);
+                    }
+                }
+            }
+
+            if (targetUnit.Unit.HP <= 0)
+            {
+                yield return dialogueBox.TypeDialogue($"{targetUnit.Unit.UnitBase.Name} has been slain");
+                yield return new WaitForSeconds(2f);
+
+                CheckForBattleOver(targetUnit);
+            }
+            
         }
         else
         {
-            bool isDead = targetUnit.Unit.TakeDamage(move, sourceUnit.Unit);
-            yield return targetUnit.Hud.UpdateHP();
-            yield return sourceUnit.Hud.UpdateMana();
+            yield return dialogueBox.TypeDialogue($"{sourceUnit.Unit.UnitBase.Name} missed");
         }
+        
+    }
 
-        if (targetUnit.Unit.HP <= 0)
+    IEnumerator RunMoveEffects(MoveEffects effects, Unit source, Unit target, MoveTarget moveTarget)
+    {
+        // Stat Boosting
+        if (effects.Boosts != null)
         {
-            yield return dialogueBox.TypeDialogue($"{targetUnit.Unit.UnitBase.Name} has been slain");
-            yield return new WaitForSeconds(2f);
-
-            CheckForBattleOver(targetUnit);
+            if (moveTarget == MoveTarget.Self)
+            {
+                source.ApplyBoosts(effects.Boosts);
+            }
+            else
+            {
+                target.ApplyBoosts(effects.Boosts);
+            }
         }
+
+        // Status Condition
+        if(effects.Status != ConditionID.none)
+        {
+            if(target.StatusL.Count < 1)
+            {
+                target.SetStatus(effects.Status);
+            }
+            else
+            {
+                yield return dialogueBox.TypeDialogue($"{target.UnitBase.Name} already has a status condition!");
+            }
+        }
+
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
+    }
+
+    IEnumerator RunAfterTurn(BattleUnit sourceUnit)
+    {
+        if (state == BattleState.BattleOver) yield break;
+        yield return new WaitUntil(() => state == BattleState.RunningTurn);
 
         // Status may damage sourceUnit and that can lead to the sourceUnit being dead
         sourceUnit.Unit.OnAfterTurn();
@@ -178,30 +253,29 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator RunMoveEffects(Move move, Unit source, Unit target)
+    bool CheckIfMoveHits(Move move, Unit source, Unit target)
     {
-        var effects = move.MoveBase.MoveEffects;
-        // Stat Boosting
-        if (move.MoveBase.MoveEffects.Boosts != null)
+        if(move.MoveBase.AlwaysHits)
         {
-            if (move.MoveBase.Target == MoveTarget.Self)
-            {
-                source.ApplyBoosts(effects.Boosts);
-            }
-            else
-            {
-                target.ApplyBoosts(effects.Boosts);
-            }
+            return true;
         }
 
-        // Status Condition
-        if(effects.Status != ConditionID.none)
+        float moveAccuracy = move.MoveBase.Accuracy;
+
+        int accuracy = source.StatBoosts[Stat.Accuracy];
+
+        var boostValues = new float[] { 1f, 1.4f, 1.7f, 2f, 2.5f };
+
+        if (accuracy > 0)
         {
-            target.SetStatus(effects.Status);
+            moveAccuracy *= boostValues[accuracy];
+        }
+        else
+        {
+            moveAccuracy /= boostValues[-accuracy];
         }
 
-        yield return ShowStatusChanges(source);
-        yield return ShowStatusChanges(target);
+        return UnityEngine.Random.Range(1, 101) <= moveAccuracy;
     }
 
     IEnumerator ShowStatusChanges(Unit unit)
@@ -288,6 +362,7 @@ public class BattleSystem : MonoBehaviour
             else if (currentAction == 2)
             {
                 // Switch/Party
+                prevState = state;
                 OpenPartyScreen();
             }
             else if (currentAction == 3)
@@ -320,7 +395,7 @@ public class BattleSystem : MonoBehaviour
         {
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);
-            StartCoroutine(PlayerMove());
+            StartCoroutine(RunTurns(BattleAction.Move));
         }
         else if(Input.GetKeyDown(KeyCode.F))
         {
@@ -368,8 +443,17 @@ public class BattleSystem : MonoBehaviour
             }
 
             partyScreen.gameObject.SetActive(false);
-            state = BattleState.Busy;
-            StartCoroutine(SwitchPartyMember(selectedMember));
+
+            if(prevState == BattleState.ActionSelection)
+            {
+                prevState = null;
+                StartCoroutine(RunTurns(BattleAction.SwitchPokemon));
+            }
+            else
+            {
+                state = BattleState.Busy;
+                StartCoroutine(SwitchPartyMember(selectedMember));
+            } 
         }
         else if(Input.GetKeyDown(KeyCode.F))
         {
@@ -380,10 +464,8 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SwitchPartyMember(Unit newUnit)
     {
-        bool currentUnitDead = true;
         if(playerUnit.Unit.HP > 0)
         {
-            currentUnitDead = false;
             yield return dialogueBox.TypeDialogue($"{playerUnit.Unit.UnitBase.Name} is switching");
             yield return new WaitForSeconds(1f);
         }
@@ -395,14 +477,7 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogue($"Boom waddup {newUnit.UnitBase.Name} here.");
         yield return new WaitForSeconds(1f);
 
-        if(currentUnitDead)
-        {
-            ChooseFirstTurn();
-        }
-        else
-        {
-            StartCoroutine(EnemyMove());
-        }
+        state = BattleState.RunningTurn;
     }
 }
 
@@ -410,5 +485,10 @@ public class BattleSystem : MonoBehaviour
 
 public enum BattleState
 {
-    Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver
+    Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, BattleOver
+}
+
+public enum BattleAction
+{
+    Move, SwitchPokemon, UseItem, Run
 }

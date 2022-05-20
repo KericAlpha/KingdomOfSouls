@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
-    [SerializeField] BattleSystem battleSystem;
+    [SerializeField] NewBattleSystem battleSystem;
     [SerializeField] Camera worldCamera;
 
     GameState state;

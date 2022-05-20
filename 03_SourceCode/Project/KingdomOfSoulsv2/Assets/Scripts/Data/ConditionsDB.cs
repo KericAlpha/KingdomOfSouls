@@ -12,10 +12,11 @@ public class ConditionsDB
             {
                 Name = "Burn",
                 StartMessage = "has been burned",
+                SpritePath = "Battle/Burn_Icon",
                 OnAfterTurn = (Unit unit) =>
                 {
                     // Burn tick damage
-                    unit.UpdateHP(unit.HP/8);
+                    unit.UpdateHP(unit.MaxHP/8);
                     unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} is burning");
                 }
             }
@@ -27,9 +28,10 @@ public class ConditionsDB
             {
                 Name = "Paralyzed",
                 StartMessage = "has been paralyzed",
+                SpritePath = "Battle/Paralyzed_Icon",
                 OnBeforeMove = (Unit unit) =>
                 {
-                    if(Random.Range(1,11) >= 1)
+                    if(Random.Range(1,11) >= 5)
                     {
                         // Will not perform move
                         unit.StatusChanges.Enqueue($"{unit.UnitBase.Name} is paralyzed and can't move");
@@ -49,6 +51,7 @@ public class ConditionsDB
             {
                 Name = "Freeze",
                 StartMessage = "has been frozen",
+                SpritePath = "Battle/Freeze_Icon",
                 OnBeforeMove = (Unit unit) =>
                 {
                     if(Random.Range(1,11) >= 5)
@@ -72,6 +75,7 @@ public class ConditionsDB
             {
                 Name = "Sleep",
                 StartMessage = "is sleeping",
+                SpritePath = "Battle/Sleep_Icon",
                 OnBeforeMove = (Unit unit) =>
                 {
                     if(Random.Range(1,11) <= 2 + unit.StatusCureChance)
