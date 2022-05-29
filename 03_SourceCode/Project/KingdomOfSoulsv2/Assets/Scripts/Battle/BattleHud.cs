@@ -43,7 +43,8 @@ public class BattleHud : MonoBehaviour
         }
         else
         {
-            int index = 0;
+            int index
+                = 0;
             foreach(Condition status in unit.StatusL)
             {
                 if(status != null)

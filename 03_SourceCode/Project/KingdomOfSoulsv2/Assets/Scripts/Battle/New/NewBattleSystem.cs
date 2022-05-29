@@ -14,7 +14,7 @@ public class NewBattleSystem : MonoBehaviour
     [SerializeField] BattleUnit enemyUnit3;
     [SerializeField] BattleUnit enemyUnit4;
     [SerializeField] Selection selection;
-    [SerializeField] PartyScreen partyScreen;
+    [SerializeField] NewPartyScreen partyScreen;
 
     public event Action<bool> OnBattleOver;
 
@@ -23,6 +23,7 @@ public class NewBattleSystem : MonoBehaviour
     int currentAction;
     int currentMove;
     int currentMember;
+    Unit switchMember;
 
     Party playerParty;
     Unit enemy;
@@ -68,7 +69,17 @@ public class NewBattleSystem : MonoBehaviour
     void OpenPartyScreen()
     {
         state = BattleState.PartyScreen;
+        /*Debug.Log("Before");
+        foreach(Unit u in playerParty.Units)
+        {
+            Debug.Log(u.UnitBase.name + "" + u.isInBattle);
+        }*/
         partyScreen.SetPartyData(playerParty.Units);
+        /*Debug.Log("After");
+        foreach (Unit u in playerParty.Units)
+        {
+            Debug.Log(u.UnitBase.name + "" + u.isInBattle);
+        }*/
         partyScreen.gameObject.SetActive(true);
     }
 
@@ -118,7 +129,7 @@ public class NewBattleSystem : MonoBehaviour
         {
             if (playerAction == BattleAction.SwitchPokemon)
             {
-                var selectedPokemon = playerParty.Units[currentMember];
+                var selectedPokemon = switchMember;
                 state = BattleState.Busy;
                 yield return SwitchPartyMember(selectedPokemon);
             }
@@ -140,7 +151,11 @@ public class NewBattleSystem : MonoBehaviour
     {
         state = BattleState.RunningTurn;
 
-        sourceUnit.Hud.MiniHud();
+        if(sourceUnit.IsPlayerUnit)
+        {
+            sourceUnit.Hud.MiniHud();
+        }
+        
         selection.EnableActionSelector(false);
 
         bool canRunMove = sourceUnit.Unit.OnBeforeMove();
@@ -325,13 +340,13 @@ public class NewBattleSystem : MonoBehaviour
         {
             HandleActionSelection();
         }
-
         else if (state == BattleState.MoveSelection)
         {
             HandleMoveSelection();
         }
         else if (state == BattleState.PartyScreen)
         {
+            //Debug.Log("Party screen");
             HandlePartySelection();
         }
     }
@@ -348,13 +363,13 @@ public class NewBattleSystem : MonoBehaviour
             currentAction--;
         }
 
-        Debug.Log(currentAction);
+        //Debug.Log(currentAction);
 
         currentAction = Mathf.Clamp(currentAction, 0, 3);
 
         selection.UpdateActionSelection(currentAction);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space))
         {
             if (currentAction == 0)
             {
@@ -364,6 +379,7 @@ public class NewBattleSystem : MonoBehaviour
             else if (currentAction == 1)
             {
                 // Item/Bag
+                //ItemSelection();
             }
             else if (currentAction == 2)
             {
@@ -413,38 +429,41 @@ public class NewBattleSystem : MonoBehaviour
 
     void HandlePartySelection()
     {
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            currentMember++;
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            currentMember--;
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            currentMember += 2;
+            currentMember += 1;
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            currentMember -= 2;
+            currentMember -= 1;
         }
 
-        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Units.Count - 1);
+        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Units.Count - 5);
+
+        //Debug.Log(currentMember);
 
         partyScreen.UpdateMemberSelection(currentMember);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var selectedMember = playerParty.Units[currentMember];
-            if (selectedMember.HP <= 0)
+            //Debug.Log(currentMember);
+            //Debug.Log("Before: " + partyScreen.getIndexOfUnit(currentMember));
+            
+            switchMember = playerParty.Units[partyScreen.getIndexOfUnit(currentMember)];
+            partyUnit1.Unit.isInBattle = false;
+            switchMember.isInBattle = true;
+
+            //Debug.Log("After: " + partyScreen.getIndexOfUnit(currentMember));
+
+            //Debug.Log(selectedMember.UnitBase.name);
+
+            if (switchMember.HP <= 0)
             {
-                partyScreen.SetMessageText("He dead brah");
                 return;
             }
-            if (selectedMember == partyUnit1.Unit)
+            if (switchMember == partyUnit1.Unit)
             {
-                partyScreen.SetMessageText("He already it battle brah");
+                Debug.Log("same unit");
                 return;
             }
 
@@ -457,8 +476,9 @@ public class NewBattleSystem : MonoBehaviour
             }
             else
             {
+                Debug.Log("switch");
                 state = BattleState.Busy;
-                StartCoroutine(SwitchPartyMember(selectedMember));
+                StartCoroutine(SwitchPartyMember(switchMember));
             }
         }
         else if (Input.GetKeyDown(KeyCode.F))
@@ -484,6 +504,11 @@ public class NewBattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         state = BattleState.RunningTurn;
+    }
+
+    public void ItemSelection()
+    {
+        Debug.Log("Item selection");
     }
 
     public enum BattleState

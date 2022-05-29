@@ -20,6 +20,7 @@ public class Unit
 
     public int HP { get; set; }
     public int Mana { get; set; }
+    public bool isInBattle { get; set; }
     public List<Move> Moves { get; set; }
     public Move CurrentMove { get; set; }
 

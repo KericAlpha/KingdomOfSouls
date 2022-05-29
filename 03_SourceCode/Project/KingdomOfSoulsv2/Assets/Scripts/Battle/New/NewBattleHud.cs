@@ -11,6 +11,9 @@ public class NewBattleHud : MonoBehaviour
     [SerializeField] NewMPBar mpBar;
     [SerializeField] Soulbar soulbar;
 
+    bool showing = false;
+    bool mini = false;
+
     Unit unit;
 
     public void SetData(Unit unit)
@@ -25,14 +28,32 @@ public class NewBattleHud : MonoBehaviour
 
     public void ShowHud()
     {
-        float xAxis = this.gameObject.transform.localScale.x;
-        this.transform.position = new Vector3(xAxis, -130, 0);
+        if(!showing)
+        {
+            float xAxis = this.transform.position.x;
+            float yAxis = this.transform.position.y;
+            float ny = yAxis + 2f;
+            
+            this.transform.position = new Vector3(xAxis, ny);
+            showing = true;
+            mini = false;
+        }
+        
     }
 
     public void MiniHud()
     {
-        float xAxis = this.gameObject.transform.localScale.x;
-        this.transform.position = new Vector3(xAxis, -208, 0);
+        if(!mini)
+        {
+            float xAxis = this.transform.position.x;
+            float yAxis = this.transform.position.y;
+            float ny = yAxis - 2f;
+
+            this.transform.position = new Vector3(xAxis, ny, 0);
+            mini = true;
+            showing = false;
+        }
+        
     }
 
     public void UpdateHP()
