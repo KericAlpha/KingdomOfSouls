@@ -88,9 +88,9 @@ Viper Fangs, 0, 85, 95, casts poison on one foe
 
 ## Physical
 
-Shadow Strike, 80, 90, 50, AOE Attack
+Shadow Strike, 70, 90, 50, AOE Attack
 
-Air Cutter, 50, 85, 15, Single Target Attack, hits 1-3 times
+Air Cutter, 40, 85, 15, Single Target Attack, hits 1-3 times
 
 Heart Stabber, 90, 80, 55, Single Target Attack, 15 percent chance for an insta kill
 
@@ -100,21 +100,21 @@ Thunder Beam, 80, 90, 50, Single Target Attack, may paralyze the enemy
 
 Dark Cloud, 70, 95, 70, AOE Attack, may paralyze the enemy
 
-Lightning Summon , 120, 75, 80, Single Target
+Lightning Summon , 110, 70, 95, Single Target
 
 ## Fire
 
-Fireball, 100, 85, 70, Single Target Attack
+Fireball, 100, 85, 80, Single Target Attack
 
-Imblaze, 60, 75, 60, Single Target Attack, burns the enemy
+Imblaze, 50, 75, 70, Single Target Attack, burns the enemy
 
 Fire Wave, 80, 90, 70, AOE Attack, low chance to burn enemies
 
 ## Ice
 
-Shivering Snowstrike, 50, 60, 60, Single Target Attack, great change to freeze the enemy (1-2 turn)
+Shivering Snowstrike, 50, 75, 70, Single Target Attack, great change to freeze the enemy 
 
-Freezing Arrow, 80, 90, 60, Single Target Attack, may freeze the enemy
+Freezing Arrow, 80, 90, 70, Single Target Attack, may freeze the enemy
 
 ## Light
 
@@ -122,21 +122,21 @@ Ray of Light, 60, 90, 50, Single Target Attack
 
 Sacred Sword, 100, 85, 80, Single Target Attack
 
-Salvation, ∞, 50, 200, Instant Kill to all enemies
+Salvation, ∞, 35, 200, Instant Kill to all enemies
 
 ## Dark
 
 Eclipse, 75, 90, 65, Single Target Attack, sinks accuracy of the enemy
 
-Demon Scythe, 100, 85, 80, Single Target Attack, 20 Percent chance for insta kill
+Demon Scythe, 100, 85, 80, Single Target Attack, 10 Percent chance for insta kill
 
-Exorcism, ∞, 50, 200, Instant Kill to all enemies
+Exorcism, ∞, 35, 200, Instant Kill to all enemies
 
 ## Suport
 
-Sharpen, 0, 100, 70, Strength Buff (AOE)
+Sharpen, 0, 100, 70, DMG Buff for Assasins Warriors and Undead
 
-Concentrate, 0, 100, Magic Buff (AOE)
+Concentrate, 0, 100, 70 DMG Buff for Mage Supporter and Healer
 
 Agility, 0, 100, 90, Speed Buff (AOE)
 
@@ -160,7 +160,7 @@ Light Wall, 0, 100, 200, Blocks Light attack (1 time)
 
 Dark Wall, 0, 100, 200, Blocks Dark attack (1 time) 
 
-Planet Veil, 0, 100, 500, Reflects all instant kills unitl end of the Battle (party), doesnt work if hit by an already relfected attack 
+Planet Veil, 0, 100, 500, Reflects all instant kills unitl end of the Battle (party), doesnt work if hit by an already reflected attack 
 
 ## Heal
 
