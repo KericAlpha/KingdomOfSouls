@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Hero
   description: 
-  sprite: {fileID: 21300000, guid: 1620af5b9b73ad44db5d17208014f185, type: 3}
+  sprite: {fileID: 21300000, guid: ff31da0f8a5eb61488cd6093d26b4289, type: 3}
   unitType: 1
   damage: 44
   defense: 57
