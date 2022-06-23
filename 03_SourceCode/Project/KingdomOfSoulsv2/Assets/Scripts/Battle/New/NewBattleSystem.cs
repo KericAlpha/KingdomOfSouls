@@ -44,7 +44,7 @@ public class NewBattleSystem : MonoBehaviour
 
         partyScreen.Init();
 
-        selection.SetMoveNames(partyUnit1.Unit.Moves);
+        selection.SetMoveNames(partyUnit1.Unit.Moves, 0);
 
         //yield return selection.TypeDialogue($"What is {enemyUnit1.Unit.UnitBase.Name} doing here?");
         yield return new WaitForSeconds(1f);
@@ -498,7 +498,7 @@ public class NewBattleSystem : MonoBehaviour
 
         partyUnit1.Setup(newUnit);
 
-        selection.SetMoveNames(newUnit.Moves);
+        selection.SetMoveNames(newUnit.Moves, 0);
 
         //yield return selection.TypeDialogue($"Boom waddup {newUnit.UnitBase.Name} here."); 
         yield return new WaitForSeconds(1f);

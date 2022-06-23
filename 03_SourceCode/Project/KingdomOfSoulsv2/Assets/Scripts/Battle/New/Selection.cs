@@ -15,6 +15,8 @@ public class Selection : MonoBehaviour
     [SerializeField] TMP_Text manaText;
     [SerializeField] TMP_Text dmgText;
     [SerializeField] TMP_Text typeText;
+
+    List<Move> bmoves;
     // details text
 
 
@@ -45,16 +47,22 @@ public class Selection : MonoBehaviour
 
     public void UpdateMoveSelection(int selectedMove, Move move)
     {
-        for (int i = 0; i < moveTexts.Count; i++)
+        int sm = Mathf.Clamp(selectedMove - 3, 0, 10);
+        SetMoveNames(bmoves, sm);
+
+        int cnt = 0;
+
+        for (int i = sm; i < sm+4; i++)
         {
             if (i == selectedMove)
             {
-                moveTexts[i].color = Color.cyan;
+                moveTexts[cnt].color = Color.cyan;
             }
             else
             {
-                moveTexts[i].color = Color.white;
+                moveTexts[cnt].color = Color.white;
             }
+            cnt++;
         }
 
         manaText.text = $"Mana: {move.ManaCost}";
@@ -62,18 +70,21 @@ public class Selection : MonoBehaviour
         typeText.text = move.MoveBase.MoveType.ToString();
     }
 
-    public void SetMoveNames(List<Move> moves)
+    public void SetMoveNames(List<Move> moves, int startingMove)
     {
+        bmoves = moves;
+
         for (int i = 0; i < moveTexts.Count; i++)
         {
             if (i < moves.Count)
             {
-                moveTexts[i].text = moves[i].MoveBase.Name;
+                moveTexts[i].text = bmoves[startingMove].MoveBase.Name;
             }
             else
             {
                 moveTexts[i].text = "-----";
             }
+            startingMove++;
         }
     }
 }
