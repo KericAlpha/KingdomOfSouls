@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: Air Cutter
   m_EditorClassIdentifier: 
   name: Air Cutter
-  description: 
+  description: Creates a sharp blade that goes through the enemy.
   moveType: 1
   power: 50
   accuracy: 85
+  alwaysHits: 0
   manaCost: 15
+  moveCategory: 0
+  moveEffects:
+    boosts: []
+    status: 0
+  secondaryEffects: []
+  target: 0

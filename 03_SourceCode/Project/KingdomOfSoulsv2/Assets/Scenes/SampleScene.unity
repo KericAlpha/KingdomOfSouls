@@ -466,6 +466,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHud2
       objectReference: {fileID: 0}
+    - target: {fileID: 9049012606284746427, guid: 43ecda219edb63245a7c858a3e45cebe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43ecda219edb63245a7c858a3e45cebe, type: 3}
 --- !u!224 &57543379 stripped
@@ -26299,6 +26303,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PMHud2
       objectReference: {fileID: 0}
+    - target: {fileID: 9049012606284746427, guid: 43ecda219edb63245a7c858a3e45cebe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43ecda219edb63245a7c858a3e45cebe, type: 3}
 --- !u!224 &1891051704 stripped
@@ -27600,6 +27608,7 @@ MonoBehaviour:
   manaText: {fileID: 687565554}
   dmgText: {fileID: 2097455675}
   typeText: {fileID: 579281789}
+  moveDetailsText: {fileID: 1630513503}
 --- !u!1 &2139491070
 GameObject:
   m_ObjectHideFlags: 0

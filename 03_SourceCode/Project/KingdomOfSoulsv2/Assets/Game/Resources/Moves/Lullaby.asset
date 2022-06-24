@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Lullaby
   m_EditorClassIdentifier: 
   name: Lullaby
-  description: 
+  description: Sleeps the enemy.
   moveType: 7
   power: 0
   accuracy: 100
+  alwaysHits: 0
   manaCost: 150
   moveCategory: 1
   moveEffects:
     boosts: []
     status: 4
+  secondaryEffects: []
   target: 0

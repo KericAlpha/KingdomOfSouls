@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Lighter
   m_EditorClassIdentifier: 
   name: Lighter
-  description: 
+  description: Lights the enemy on fire.
   moveType: 7
   power: 0
   accuracy: 100
+  alwaysHits: 0
   manaCost: 150
   moveCategory: 1
   moveEffects:
     boosts: []
     status: 1
+  secondaryEffects: []
   target: 0

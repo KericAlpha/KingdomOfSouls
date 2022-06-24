@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: Electric Needle
   m_EditorClassIdentifier: 
   name: Electric Needle
-  description: 
+  description: Creates an electric needle that strikes the enemy.
   moveType: 2
   power: 60
   accuracy: 90
+  alwaysHits: 0
   manaCost: 20
+  moveCategory: 0
+  moveEffects:
+    boosts: []
+    status: 0
+  secondaryEffects: []
+  target: 0

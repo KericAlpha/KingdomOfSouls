@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Light
   m_EditorClassIdentifier: 
   name: Light
-  description: 
+  description: Creates a bright light. Decreases enemy Accuracy.
   moveType: 7
   power: 0
   accuracy: 90
+  alwaysHits: 0
   manaCost: 40
   moveCategory: 1
   moveEffects:
     boosts:
     - stat: 3
       boost: -1
+    status: 0
+  secondaryEffects: []
   target: 0

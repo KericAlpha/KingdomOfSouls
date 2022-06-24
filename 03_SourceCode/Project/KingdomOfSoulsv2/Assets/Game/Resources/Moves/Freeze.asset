@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Freeze
   m_EditorClassIdentifier: 
   name: Freeze
-  description: 
+  description: Freezes the enemy.
   moveType: 0
   power: 0
   accuracy: 100
+  alwaysHits: 0
   manaCost: 150
   moveCategory: 1
   moveEffects:
     boosts: []
     status: 3
+  secondaryEffects: []
   target: 0

@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: Attack (Physical)
   m_EditorClassIdentifier: 
   name: Attack
-  description: 
+  description: A normal attack.
   moveType: 1
   power: 20
   accuracy: 100
+  alwaysHits: 0
   manaCost: 0
+  moveCategory: 0
+  moveEffects:
+    boosts: []
+    status: 0
+  secondaryEffects: []
+  target: 0

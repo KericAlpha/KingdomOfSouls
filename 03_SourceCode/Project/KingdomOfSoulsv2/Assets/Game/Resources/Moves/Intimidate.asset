@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Intimidate
   m_EditorClassIdentifier: 
   name: Intimidate
-  description: 
+  description: Intimidates the enemy. Decreases enemy DMG.
   moveType: 7
   power: 0
   accuracy: 100
+  alwaysHits: 0
   manaCost: 150
   moveCategory: 1
   moveEffects:
     boosts:
     - stat: 0
       boost: -1
+    status: 0
+  secondaryEffects: []
   target: 0

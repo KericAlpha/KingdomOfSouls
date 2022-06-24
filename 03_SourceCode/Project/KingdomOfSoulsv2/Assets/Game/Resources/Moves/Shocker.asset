@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Shocker
   m_EditorClassIdentifier: 
   name: Shocker
-  description: 
+  description: Paralyzes the enemy.
   moveType: 7
   power: 0
   accuracy: 100
+  alwaysHits: 0
   manaCost: 150
   moveCategory: 1
   moveEffects:
     boosts: []
     status: 2
+  secondaryEffects: []
   target: 0

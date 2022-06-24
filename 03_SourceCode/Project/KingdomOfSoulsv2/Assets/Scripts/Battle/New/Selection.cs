@@ -15,6 +15,7 @@ public class Selection : MonoBehaviour
     [SerializeField] TMP_Text manaText;
     [SerializeField] TMP_Text dmgText;
     [SerializeField] TMP_Text typeText;
+    [SerializeField] TMP_Text moveDetailsText;
 
     List<Move> bmoves;
     // details text
@@ -68,6 +69,8 @@ public class Selection : MonoBehaviour
         manaText.text = $"Mana: {move.ManaCost}";
         dmgText.text = $"Dmg: {move.MoveBase.Power}";
         typeText.text = move.MoveBase.MoveType.ToString();
+        moveDetailsText.text = move.MoveBase.Description;
+
     }
 
     public void SetMoveNames(List<Move> moves, int startingMove)
